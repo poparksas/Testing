@@ -1,0 +1,501 @@
+<Task schemaVersion="5.1">
+    <Registration>
+        <Name>One-Way ANOVA</Name>
+        <Description>A one-way analysis of variance (ANOVA) tests and provides graphs for differences among the means of a single categorical variable on a single continuous dependent variable.</Description>
+        <GUID>d4bcb606-8cbe-47de-bfbc-2eae932d5729</GUID>
+        <Procedures>GLM</Procedures>
+        <Version>3.6</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/#/?softwareId=STUDIOMID&amp;softwareVersion=3.6&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_glm_overview.htm">The GLM Procedure</Link>         
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+        </Links>
+    </Registration>
+    
+    <Metadata>
+        <DataSources>
+            <DataSource name="dataset" where="true">
+                <Roles>
+                    <Role type="N" name="dependentVariable" minVars="1" maxVars="1" exclude="independentVariable">Dependent variable:</Role>
+                    <Role type="A" name="independentVariable" minVars="1" maxVars="1" exclude="dependentVariable">Categorical variable:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+
+        <Options>
+            <Option name="dataTab" inputType="string">DATA</Option> 
+            <Option name="optionsTab" inputType="string">OPTIONS</Option> 
+            <Option name="dataGroup" inputType="string">DATA</Option> 
+            <Option name="rolesGroup" inputType="string">ROLES</Option> 
+
+            <Option name="testsGroup" inputType="string">TESTS</Option>
+                    
+            <Option name="hovTestGroup" inputType="string">HOMOGENEITY OF VARIANCE</Option>
+            <Option name="hovTest" inputType="combobox" defaultValue="levene">Test:</Option>
+            <Option name="hovTestNone" inputType="string">None</Option>
+            <Option name="bartlett" inputType="string">Bartlett</Option>
+            <Option name="brownForsythe" inputType="string">Brown and Forsythe</Option>
+            <Option name="levene" inputType="string">Levene</Option>
+            <Option name="obrien" inputType="string">O'Brien</Option>
+            <Option name="welchANOVA" inputType="checkbox" defaultValue="1">Welch's variance-weighted ANOVA</Option>
+            
+            <Option name="comparisonsGroup" inputType="string">COMPARISONS</Option>
+            <Option name="comparisonCombo" inputType="combobox" defaultValue="tukeyChoice">Comparisons method:</Option>
+            <Option name="bonferroniChoice" inputType="string">Bonferroni</Option>
+            <Option name="DuncanChoice" inputType="string">Duncan multiple range</Option>
+            <Option name="DunnettTwoTailed" inputType="string">Dunnett two-tail</Option>
+            <Option name="DunnettLowerOneTailed" inputType="string">Dunnett lower one-tail</Option>
+            <Option name="DunnettUpperOneTailed" inputType="string">Dunnett upper one-tail</Option>
+            <Option name="gabrielChoice" inputType="string">Gabriel</Option>
+            <Option name="regwChoice" inputType="string">Ryan-Einot-Gabriel-Welch</Option>
+            <Option name="nelsonChoice" inputType="string">Nelson</Option>
+            <Option name="scheffeChoice" inputType="string">Scheffe</Option>
+            <Option name="sidakChoice" inputType="string">Sidak</Option>
+            <Option name="snkChoice" inputType="string">Student-Newman-Keuls</Option>
+            <Option name="lsdChoice" inputType="string">Least significant difference (LSD)</Option>
+            <Option name="tukeyChoice" inputType="string">Tukey</Option>
+            <Option name="noComparison" inputType="string">None</Option>
+
+            <Option name="duncanNote" inputType="string" indent="1">The LS-mean difference plot is not available with the Duncan multiple range comparison method</Option>
+            <Option name="gabrielNote" inputType="string" indent="1">The LS-mean difference plot is not available with the Gabriel comparison method</Option>
+            <Option name="regwNote" inputType="string" indent="1">The LS-mean difference plot is not available with the Ryan-Einot-Gabriel-Welch comparison method</Option>
+            <Option name="snkNote" inputType="string" indent="1">The LS-mean difference plot is not available with the Student-Newman-Keuls comparison method</Option>
+
+            <Option name="dunnettControlLevel" inputType="distinct" indent="1" source="independentVariable">Control level:</Option>
+
+            <Option name="alpha" inputType="combobox" defaultValue="alpha_05" width="100px">Significance level:</Option>
+            <Option name="alpha_10" inputType="string">0.10</Option>
+            <Option name="alpha_05" inputType="string">0.05</Option>
+            <Option name="alpha_01" inputType="string">0.01</Option>
+            <Option name="alphaSpecify" inputType="string">Use custom value</Option>
+
+            <Option name="alphaValue" inputType="numbertext" indent="1" width="100px" required="true" rangeMessage="Enter a number greater than zero and less than 1 for the significance level" promptMessage="Enter a number greater than zero and less than 1 for the significance level" missingMessage="Enter a number greater than zero and less than 1 for the significance level" minValue="0.00000000001" maxValue="0.99999999999" invalidMessage="Enter a number greater than zero and less than 1 for the significance level">Custom significance level:</Option>
+
+            <Option name="plotsGroup" inputType="string">PLOTS</Option>
+            <Option name="plotsCombo" inputType="combobox" defaultValue="defaultPlotsChoice">Display plots:</Option>
+            <Option name="defaultPlotsChoice" inputType="string">Default plots</Option>
+            <Option name="selectedPlotsChoice" inputType="string">Selected plots</Option>
+            <Option name="suppressPlotsChoice" inputType="string">Suppress all plots</Option>
+            <Option name="boxPlot" inputType="checkbox" indent="1" defaultValue="1">Box plot</Option>
+            <Option name="meanPlot" inputType="checkbox" indent="1" defaultValue="1">Means plot</Option>
+            <Option name="diffPlot" inputType="checkbox" indent="1" defaultValue="1">LS-mean difference plot</Option>
+            <Option name="diagnosticPlots" inputType="checkbox" indent="1" defaultValue="0">Diagnostics plot</Option>
+            <Option name="unpackDiagnosticPlots" inputType="combobox" indent="2" defaultValue="panelChoice">Display as:</Option>
+            <Option name="unpackChoice" inputType="string">Individual plots</Option>
+            <Option name="panelChoice" inputType="string">Panel of plots</Option>
+
+            <Option name="maxpointsCombo" inputType="combobox" defaultValue="maxpointsDefault">Maximum number of plot points:</Option>
+            <Option name="maxpointsDefault" inputType="string">Default(5,000)</Option>
+            <Option name="maxpoints10000" inputType="string">10,000</Option>
+            <Option name="maxpointsSpecify" inputType="string">Use custom value</Option>
+            <Option name="maxpointsNoLimit" inputType="string">No limit</Option>
+
+            <Option name="maxpointsValue" inputType="numbertext" indent="1" required="true" rangeMessage="Enter an integer number greater than zero for the maximum number of plot points" promptMessage="Enter an integer number greater than zero for the maximum number of plot points" missingMessage="Enter an integer number greater than zero for the maximum number of plot points" minValue="1" invalidMessage="Enter an integer number greater than zero for the maximum number of plot points" decimalPlaces="0">Custom maximum number of points:</Option>
+
+<!-- Output data set options -->
+            <Option name="outputTab" inputType="string">OUTPUT</Option>
+            <Option name="outputGroup" inputType="string">OUTPUT DATA SET</Option>
+            <Option name="outputDS" inputType="checkbox">Create observation statistics data set</Option>
+            <Option name="outputDSName" inputType="outputdata" indent="1" defaultValue="Oneway_stats" required="true">Data set name:</Option>
+            
+            <Option name="predictedStatsGroup" inputType="string" indent="1">Predicted Values</Option>
+            <Option name="residualStatsGroup" inputType="string" indent="1">Residuals</Option>
+            <Option name="influenceStatsGroup" inputType="string" indent="1">Influence Statistics</Option>
+            <Option name="stderrStatsGroup" inputType="string" indent="1">Standard Errors</Option>
+
+            <Option name="predicted" inputType="checkbox">Predicted value</Option>
+            <Option name="lcl" inputType="checkbox">Confidence intervals for individual predicted value</Option>   
+            <Option name="clm" inputType="checkbox">Confidence intervals for mean predicted value</Option>
+            <Option name="residual" inputType="checkbox">Residual</Option>
+            <Option name="student" inputType="checkbox">Studentized residual</Option>
+            <Option name="rstudent" inputType="checkbox">Studentized residual with current observation removed</Option>
+            <Option name="stdr" inputType="checkbox">Standard error of residual</Option>
+            <Option name="stdp" inputType="checkbox">Standard error of mean predicted value</Option>
+            <Option name="stdi" inputType="checkbox">Standard error of individual predicted value</Option> 
+            <Option name="cookd" inputType="checkbox">Cook's D influence</Option>
+            <Option name="covratio" inputType="checkbox">Covratio</Option>
+            <Option name="dffits" inputType="checkbox">Dffits</Option>
+            <Option name="h" inputType="checkbox">Leverage</Option>                   
+
+            <Option name="outputConfidence" inputType="combobox" indent="1" defaultValue="confidence95" width="175px">Confidence level:</Option>
+            <Option name="confidence90" inputType="string">90%</Option>
+            <Option name="confidence95" inputType="string">95%</Option>
+            <Option name="confidence99" inputType="string">99%</Option>
+            <Option name="confidenceSpecify" inputType="string">Use custom value</Option>
+            <Option name="confidenceValue" inputType="numbertext" indent="1" defaultValue="95" width="75px" required="true" rangeMessage="Enter a number greater than zero and less than 100 for the confidence level" promptMessage="Enter a number greater than zero and less than 100 for the confidence level" missingMessage="Enter a number greater than zero and less than 100 for the confidence level" minValue="0.00000000001" maxValue="99.999999999" invalidMessage="Enter a number greater than zero and less than 100 for the confidence level" decimalPlaces="0,15">Custom confidence level:</Option>
+
+        </Options>
+    </Metadata>
+
+    <UI>
+        <Container option="dataTab">
+            <Group option="dataGroup" open="true">
+                <DataItem data="dataset"/>
+            </Group>
+            <Group option="rolesGroup" open="true">
+                <RoleItem role="dependentVariable"/>
+                <RoleItem role="independentVariable"/>
+            </Group>
+        </Container>
+        
+        <Container option="optionsTab"> 
+                
+            <Group option="hovTestGroup" open="true">
+                <OptionChoice option="hovTest">
+                    <OptionItem option="hovTestNone"/>
+                    <OptionItem option="bartlett"/>
+                    <OptionItem option="brownForsythe"/>
+                    <OptionItem option="levene"/>
+                    <OptionItem option="obrien"/>
+                </OptionChoice>
+                <OptionItem option="welchANOVA"/>
+            </Group>
+            <Group option="comparisonsGroup" open="true">
+                <OptionChoice option="comparisonCombo">
+                    <OptionItem option="bonferroniChoice"/>
+                    <OptionItem option="DuncanChoice"/>
+                    <OptionItem option="DunnettTwoTailed"/>
+                    <OptionItem option="DunnettLowerOneTailed"/>
+                    <OptionItem option="DunnettUpperOneTailed"/>
+                    <OptionItem option="gabrielChoice"/>
+                    <OptionItem option="nelsonChoice"/>
+                    <OptionItem option="regwChoice"/>
+                    <OptionItem option="scheffeChoice"/>
+                    <OptionItem option="sidakChoice"/>
+                    <OptionItem option="snkChoice"/>
+                    <OptionItem option="lsdChoice"/>
+                    <OptionItem option="tukeyChoice"/>
+                    <OptionItem option="noComparison"/>
+                </OptionChoice>
+                <OptionChoice option="dunnettControlLevel"/>
+                <OptionChoice option="alpha">
+                    <OptionItem option="alpha_10"/>
+                    <OptionItem option="alpha_05"/>
+                    <OptionItem option="alpha_01"/>
+                    <OptionItem option="alphaSpecify"/>
+                </OptionChoice>
+                <OptionItem option="alphaValue"/>
+            </Group>
+            <Group option="plotsGroup" open="true">
+                <OptionChoice option="plotsCombo">
+                    <OptionItem option="defaultPlotsChoice"/>
+                    <OptionItem option="selectedPlotsChoice"/>
+                    <OptionItem option="suppressPlotsChoice"/>
+                </OptionChoice>
+                <OptionItem option="boxPlot"/>
+                <OptionItem option="meanPlot"/>
+                <OptionItem option="diffPlot"/>
+<OptionItem option="duncanNote"/>
+<OptionItem option="gabrielNote"/>
+<OptionItem option="regwNote"/>
+<OptionItem option="snkNote"/>
+                <OptionItem option="diagnosticPlots"/>
+                <OptionChoice option="unpackDiagnosticPlots">
+                    <OptionItem option="unpackChoice"/>
+                    <OptionItem option="panelChoice"/>
+                </OptionChoice>
+                <OptionChoice option="maxpointsCombo">
+                    <OptionItem option="maxpointsDefault"/>
+                    <OptionItem option="maxpoints10000"/>
+                    <OptionItem option="maxpointsSpecify"/>
+                    <OptionItem option="maxpointsNoLimit"/>
+                </OptionChoice>
+                <OptionItem option="maxpointsValue"/>
+            </Group>
+        </Container>
+        
+        <Container option="outputTab">  
+            <Group option="outputGroup" open="true">
+                <OptionItem option="outputDS"/> 
+                <OptionItem option="outputDSName"/>
+                <Group option="predictedStatsGroup" open="true">
+                    <OptionItem option="predicted"/>
+                    <OptionItem option="lcl"/>
+                    <OptionItem option="clm"/>
+                
+                    <OptionChoice option="outputConfidence">
+                        <OptionItem option="confidence90"/>
+                        <OptionItem option="confidence95"/>
+                        <OptionItem option="confidence99"/>
+                        <OptionItem option="confidenceSpecify"/>
+                    </OptionChoice>
+                    <OptionItem option="confidenceValue"/>
+                </Group>
+                <Group option="residualStatsGroup">
+                    <OptionItem option="residual"/>
+                    <OptionItem option="student"/>
+                    <OptionItem option="rstudent"/>
+                </Group>
+                <Group option="stderrStatsGroup">
+                    <OptionItem option="stdr"/>
+                    <OptionItem option="stdi"/>
+                    <OptionItem option="stdp"/>
+                </Group>
+                <Group option="influenceStatsGroup">
+                    <OptionItem option="cookd"/>
+                    <OptionItem option="covratio"/>
+                    <OptionItem option="dffits"/>
+                    <OptionItem option="h"/>
+                </Group>
+            </Group>
+        </Container>        
+      
+    </UI>
+    <Dependencies>
+        <Dependency condition="(!($comparisonCombo == 'noComparison'))">
+            <Target option="alpha" conditionResult="true" action="show"/>
+            <Target option="alpha" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($alpha == 'alphaSpecify')">
+            <Target option="alphaValue" conditionResult="true" action="show"/>
+            <Target option="alphaValue" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($comparisonCombo == 'DunnettTwoTailed' ||             $comparisonCombo == 'DunnettLowerOneTailed' ||             $comparisonCombo == 'DunnettUpperOneTailed')">
+            <Target option="dunnettControlLevel" conditionResult="true" action="show"/>
+            <Target option="dunnettControlLevel" conditionResult="false" action="hide"/>
+        </Dependency>   
+        
+        <Dependency condition="($plotsCombo == 'suppressPlotsChoice')">
+            <Target option="maxpointsCombo" conditionResult="true" action="hide"/>
+            <Target option="maxpointsCombo" conditionResult="false" action="show"/>
+        </Dependency>
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice')">
+            <Target option="boxPlot" conditionResult="true" action="show"/>
+            <Target option="boxPlot" conditionResult="false" action="hide"/>
+            <Target option="meanPlot" conditionResult="true" action="show"/>
+            <Target option="meanPlot" conditionResult="false" action="hide"/>
+    
+            <Target option="diffPlot" conditionResult="true" action="show"/>
+            <Target option="diffPlot" conditionResult="false" action="hide"/>
+
+            <Target option="diagnosticPlots" conditionResult="true" action="show"/>
+            <Target option="diagnosticPlots" conditionResult="false" action="hide"/>
+        </Dependency>       
+    
+        <Dependency condition="$plotsCombo == 'selectedPlotsChoice' &amp;&amp; ( $comparisonCombo == 'DuncanChoice' || $comparisonCombo == 'gabrielChoice' ||             $comparisonCombo == 'regwChoice' || $comparisonCombo == 'snkChoice' || $comparisonCombo == 'lsdChoice' )">
+            <Target option="diffPlot" conditionResult="true" action="disable"/>
+            <Target option="diffPlot" conditionResult="false" action="enable"/>
+        </Dependency>   
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice' &amp;&amp; $comparisonCombo == 'DuncanChoice')">
+            <Target option="duncanNote" conditionResult="true" action="show"/>
+            <Target option="duncanNote" conditionResult="false" action="hide"/>
+        </Dependency>   
+
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice' &amp;&amp; $comparisonCombo == 'gabrielChoice' )">
+            <Target option="gabrielNote" conditionResult="true" action="show"/>
+            <Target option="gabrielNote" conditionResult="false" action="hide"/>
+        </Dependency>   
+
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice' &amp;&amp; $comparisonCombo == 'regwChoice'  )">
+            <Target option="regwNote" conditionResult="true" action="show"/>
+            <Target option="regwNote" conditionResult="false" action="hide"/>
+        </Dependency>   
+
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice' &amp;&amp; $comparisonCombo == 'snkChoice' )">
+            <Target option="snkNote" conditionResult="true" action="show"/>
+            <Target option="snkNote" conditionResult="false" action="hide"/>
+        </Dependency>   
+
+        <Dependency condition="($maxpointsCombo=='maxpointsSpecify')">
+            <Target option="maxpointsValue" conditionResult="true" action="show"/>
+            <Target option="maxpointsValue" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($plotsCombo == 'selectedPlotsChoice' &amp;&amp; $diagnosticPlots == '1')">
+            <Target option="unpackDiagnosticPlots" conditionResult="true" action="show"/>
+            <Target option="unpackDiagnosticPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($outputDS=='1')">
+            <Target option="outputDSName" conditionResult="true" action="enable"/>
+            <Target option="outputDSName" conditionResult="false" action="disable"/>
+
+            <Target option="predictedStatsGroup" conditionResult="true" action="show"/>
+            <Target option="predictedStatsGroup" conditionResult="false" action="hide"/>
+            <Target option="residualStatsGroup" conditionResult="true" action="show"/>
+            <Target option="residualStatsGroup" conditionResult="false" action="hide"/>
+            <Target option="stderrStatsGroup" conditionResult="true" action="show"/>
+            <Target option="stderrStatsGroup" conditionResult="false" action="hide"/>
+            <Target option="influenceStatsGroup" conditionResult="true" action="show"/>
+            <Target option="influenceStatsGroup" conditionResult="false" action="hide"/>
+<!-- 
+            <Target option="predicted" conditionResult="true"  action="show"/>
+            <Target option="predicted" conditionResult="false" action="hide"/>
+            <Target option="clm" conditionResult="true"  action="show"/>
+            <Target option="clm" conditionResult="false" action="hide"/>
+            <Target option="lcl" conditionResult="true"  action="show"/>
+            <Target option="lcl" conditionResult="false" action="hide"/>
+            <Target option="residual" conditionResult="true"  action="show"/>
+            <Target option="residual" conditionResult="false" action="hide"/>
+            <Target option="student" conditionResult="true"  action="show"/>
+            <Target option="student" conditionResult="false" action="hide"/>
+            <Target option="rstudent" conditionResult="true"  action="show"/>
+            <Target option="rstudent" conditionResult="false" action="hide"/>
+            <Target option="stdr" conditionResult="true"  action="show"/>
+            <Target option="stdr" conditionResult="false" action="hide"/>
+            <Target option="stdi" conditionResult="true"  action="show"/>
+            <Target option="stdi" conditionResult="false" action="hide"/>
+            <Target option="stdp" conditionResult="true"  action="show"/>
+            <Target option="stdp" conditionResult="false" action="hide"/>
+            <Target option="cookd" conditionResult="true"  action="show"/>
+            <Target option="cookd" conditionResult="false" action="hide"/>
+            <Target option="covratio" conditionResult="true"  action="show"/>
+            <Target option="covratio" conditionResult="false" action="hide"/>
+            <Target option="dffits" conditionResult="true"  action="show"/>
+            <Target option="dffits" conditionResult="false" action="hide"/>
+            <Target option="h" conditionResult="true"  action="show"/>
+            <Target option="h" conditionResult="false" action="hide"/>
+-->
+        </Dependency>
+        <Dependency condition="($outputDS=='1' &amp;&amp; ($lcl=='1' || $clm=='1'))">
+            <Target option="outputConfidence" conditionResult="true" action="show"/>
+            <Target option="outputConfidence" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($outputDS=='1' &amp;&amp; ($lcl=='1' || $clm=='1') &amp;&amp;              $outputConfidence == 'confidenceSpecify')">
+            <Target option="confidenceValue" conditionResult="true" action="show"/>
+            <Target option="confidenceValue" conditionResult="false" action="hide"/>
+        </Dependency>      
+    </Dependencies>
+ 
+    <Requirements>
+        <Requirement condition="(!($outputDS=='1') ||              (($outputDS=='1') &amp;&amp;(                $predicted == '1' ||                $lcl       == '1' ||                $clm       == '1' ||                $residual  == '1' ||                $student   == '1' ||                $rstudent  == '1' ||                $stdr      == '1' ||                $stdi      == '1' ||                $stdp      == '1' ||                $cookd     == '1' ||                $covratio  == '1' ||                $dffits    == '1' ||                $h         == '1'             )))">
+            <Message>Select at least one statistic to include in the output data set.</Message>
+        </Requirement>   
+    </Requirements>
+
+    <CodeTemplate>
+        <![CDATA[
+Title; 
+ods noproctitle;
+ods graphics / imagemap=on;
+
+proc glm data=$dataset
+#if($plotsCombo == 'suppressPlotsChoice') plots=none
+#else
+   #if (!($boxPlot == 1 || $diagnosticPlots == 1 || $meanPlot == 1 || ($diffPlot && $diffPlot == 1)))  
+   #else 
+      #set($bool_maxpoints = 0)#if (!($maxpointsCombo == 'maxpointsDefault'))#set($bool_maxpoints = 1)#end
+#if (!($plotsCombo == 'defaultPlotsChoice' && $bool_maxpoints == 0))
+plots(
+      #if($bool_maxpoints == 1) maxpoints=
+        #if ($maxpointsCombo == 'maxpoints10000')10000
+         #elseif ($maxpointsCombo == 'maxpointsNoLimit')none
+         #elseif ($maxpointsCombo == 'maxpointsSpecify')$maxpointsValue
+         #end
+      #end
+      #if ($plotsCombo == 'selectedPlotsChoice') only#end
+   )
+
+   #if ($plotsCombo == 'selectedPlotsChoice' && ($diagnosticPlots == 1 || $boxPlot == 1))=(
+      #if ($boxPlot == 1)boxplot#end
+      #if ($diagnosticPlots == 1) diagnostics#if($unpackDiagnosticPlots == 'unpackChoice')(unpack)#end#end
+)
+   #end
+   #end
+#end
+#end
+;
+
+#if ($dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+#end
+
+   class #foreach( $item in $independentVariable ) $item #end;
+   model #foreach( $item in $dependentVariable ) $item #end = #foreach( $item in $independentVariable ) $item #end;
+
+#set($meansCompare=0)
+#if ( $comparisonCombo == "DuncanChoice" || $comparisonCombo == "gabrielChoice" || $comparisonCombo == "regwChoice" || 
+   $comparisonCombo == "snkChoice" ) #set($meansCompare=1)#end
+
+#if ( $meansCompare==1  || !($hovTest == "hovTestNone") || $welchANOVA == "1") 
+  means #foreach( $item in $independentVariable ) $item #end / 
+   #if ( $meansCompare==1)
+      #if ( $comparisonCombo == "DuncanChoice" ) duncan
+      #elseif ( $comparisonCombo == "gabrielChoice" ) gabriel
+      #elseif ( $comparisonCombo == "regwChoice" ) regwq
+      #elseif ( $comparisonCombo == "snkChoice" ) snk
+      #end
+ alpha=#if($alpha=="alpha_05") .05 #elseif ($alpha=="alpha_01") .01 #elseif ($alpha=="alpha_10") .10 #else $alphaValue #end
+   #end
+   #if ($hovTest == "obrien") hovtest=obrien
+   #elseif ($hovTest == "levene") hovtest=levene
+   #elseif ($hovTest == "bartlett") hovtest=bartlett
+   #elseif ($hovTest == "brownForsythe") hovtest=bf
+   #end
+   #if ($welchANOVA == "1" ) welch #end
+ plots=none;
+#end
+
+#set($lsmeansCompare=0)
+#if ($comparisonCombo == "bonferroniChoice" || $comparisonCombo == 'DunnettTwoTailed'  ||
+     $comparisonCombo == 'DunnettLowerOneTailed' || $comparisonCombo == 'DunnettUpperOneTailed' || 
+     $comparisonCombo == "nelsonChoice"|| $comparisonCombo == "scheffeChoice" || 
+     $comparisonCombo == "lsdChoice" ||
+     $comparisonCombo == "sidakChoice" || $comparisonCombo == "tukeyChoice" ) #set($lsmeansCompare=1)#end
+
+#if ($lsmeansCompare == 1 || $meanPlot == 1 || $diffPlot == 1 || ($meansCompare==1 && $diffPlot == 1))
+   lsmeans #foreach( $item in $independentVariable ) $item #end /
+   #if ($lsmeansCompare == 1)
+      #if     ( $comparisonCombo == "bonferroniChoice") adjust=bon pdiff
+      #elseif ( $comparisonCombo == "DunnettTwoTailed" ) adjust=dunnett pdiff=control($CTMUtil.quoteString($dunnettControlLevel))
+      #elseif ( $comparisonCombo == "DunnettLowerOneTailed" ) adjust=dunnett pdiff=controll($CTMUtil.quoteString($dunnettControlLevel))
+      #elseif ( $comparisonCombo == "DunnettUpperOneTailed" ) adjust=dunnett pdiff=controlu($CTMUtil.quoteString($dunnettControlLevel))
+      #elseif ( $comparisonCombo == "scheffeChoice" ) adjust=scheffe pdiff
+      #elseif ( $comparisonCombo == "nelsonChoice" ) adjust=nelson pdiff
+      #elseif ( $comparisonCombo == "sidakChoice" ) adjust=sidak pdiff
+      #elseif ( $comparisonCombo == "tukeyChoice" ) adjust=tukey pdiff
+      #elseif ( $comparisonCombo == "lsdChoice" ) adjust=t pdiff
+      #end
+   #end
+   #if ($lsmeansCompare == 1 || ($meansCompare==1 && $diffPlot == 1))
+ alpha=#if($alpha=="alpha_05") .05 #elseif ($alpha=="alpha_01") .01 #elseif ($alpha=="alpha_10") .10 #else $alphaValue #end
+   #end
+   #if ($plotsCombo == 'selectedPlotsChoice' && ($meanPlot == 1 || $diffPlot == 1)) plots=(
+      #if ($meanPlot == 1) meanplot#end
+      #if ($diffPlot == 1) diffplot#end
+   )
+   #elseif ($plotsCombo == 'defaultPlotsChoice')
+   #else plots=none
+   #end
+;
+#end
+
+#if ($outputDS == '1')              
+   output out=$outputDSName
+   #if ($predicted=='1') p=predicted#end
+   #if ($lcl=='1') lcl=lcl ucl=ucl#end
+   #if ($clm=='1') lclm=lclm uclm=uclm#end
+   #if ($residual=='1') r=residual#end
+   #if ($student=='1') student=student#end
+   #if ($rstudent=='1') rstudent=rstudent#end
+   #if ($stdr=='1') stdr=stdr#end
+   #if ($stdi=='1') stdi=stdi#end
+   #if ($stdp=='1') stdp=stdp#end
+   #if ($cookd=='1') cookd=cookd#end
+   #if ($covratio=='1') covratio=covratio#end
+   #if ($dffits=='1') dffits=dffits#end
+   #if ($h=='1') h=leverage#end
+
+   #if ($lcl == 1 || $clm == 1)
+## Calculate alpha from confidence
+      #if     ($outputConfidence == "confidence95") #set( $clAlpha = 0.05 )
+      #elseif ($outputConfidence == "confidence99") #set( $clAlpha = 0.01 )
+      #elseif ($outputConfidence == "confidence90") #set( $clAlpha = 0.10 )
+      #else #set($clAlpha="%sysevalf((100-$confidenceValue)/100)") 
+      #end
+ /alpha=$clAlpha
+   #end
+;
+#end
+run; quit;
+]]>
+    </CodeTemplate>
+<TemplateValues version="5.1">
+<![CDATA[
+{"dataset":{"librarytable":"SASHELP.CARS"},"dependentVariable":"","independentVariable":"","hovTest":[{"value":"levene","displayValue":"Levene","keys":["levene",null,"Levene"],"label":"Levene","baseid":"{\"value\":\"levene\",\"label\":\"Levene\"}","id":"{\"value\":\"levene\",\"label\":\"Levene\"}1"}],"welchANOVA":"1","comparisonCombo":[{"value":"tukeyChoice","displayValue":"Tukey","keys":["tukeyChoice",null,"Tukey"],"label":"Tukey","baseid":"{\"value\":\"tukeyChoice\",\"label\":\"Tukey\"}","id":"{\"value\":\"tukeyChoice\",\"label\":\"Tukey\"}1"}],"alpha":[{"value":"alpha_05","displayValue":"0.05","keys":["alpha_05",null,"0.05"],"label":"0.05","baseid":"{\"value\":\"alpha_05\",\"label\":\"0.05\"}","id":"{\"value\":\"alpha_05\",\"label\":\"0.05\"}1"}],"alphaValue":"","plotsCombo":[{"value":"defaultPlotsChoice","displayValue":"Default plots","keys":["defaultPlotsChoice",null,"Default plots"],"label":"Default plots","baseid":"{\"value\":\"defaultPlotsChoice\",\"label\":\"Default plots\"}","id":"{\"value\":\"defaultPlotsChoice\",\"label\":\"Default plots\"}1"}],"boxPlot":"1","meanPlot":"1","diffPlot":"1","diagnosticPlots":"0","unpackDiagnosticPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"maxpointsCombo":[{"value":"maxpointsDefault","displayValue":"Default(5,000)","keys":["maxpointsDefault",null,"Default(5,000)"],"label":"Default(5,000)","baseid":"{\"value\":\"maxpointsDefault\",\"label\":\"Default(5,000)\"}","id":"{\"value\":\"maxpointsDefault\",\"label\":\"Default(5,000)\"}1"}],"maxpointsValue":"","outputDS":"0","outputDSName":{"value":"Oneway_stats","cbSelected":false},"predicted":"0","lcl":"0","clm":"0","residual":"0","student":"0","rstudent":"0","stdr":"0","stdp":"0","stdi":"0","cookd":"0","covratio":"0","dffits":"0","h":"0","outputConfidence":[{"value":"confidence95","displayValue":"95%","keys":["confidence95",null,"95%"],"label":"95%","baseid":"{\"value\":\"confidence95\",\"label\":\"95%\"}","id":"{\"value\":\"confidence95\",\"label\":\"95%\"}1"}],"confidenceValue":95}
+]]>
+</TemplateValues>
+
+</Task>

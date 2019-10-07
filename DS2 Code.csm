@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Snippet schemaVersion="1.0">
+
+	<Registration>
+		<Abbreviation></Abbreviation>
+		<Description></Description>
+		<Procedures></Procedures>
+		<Language>SAS</Language>
+		<Version></Version>
+	</Registration>
+
+	<CodeTemplate><![CDATA[/* DS2 Program */
+
+proc ds2;
+data out(overwrite=yes);
+  dcl double x;
+  dcl char(32) c;
+
+  method init();
+  end;
+
+  method run();
+    put 'Hello World!';
+  end;
+
+  method term();
+  end;
+enddata;
+run; quit;
+]]></CodeTemplate>
+
+</Snippet>

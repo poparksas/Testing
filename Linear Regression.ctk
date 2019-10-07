@@ -1,0 +1,1175 @@
+<Task schemaVersion="7.2">
+    <Registration>
+        <Name>Linear Regression</Name>
+        <Description>The Linear Regression task fits a linear model to predict a single continuous dependent variable from one or more continuous and/or categorical predictor variables and produces related statistics and graphs for interpreting the results.</Description>
+        <GUID>7786d5d1-ab54-4777-9163-7922b1106b71</GUID>
+        <Procedures>GLMSELECT PLM REG</Procedures>
+        <Version>5.2</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/?softwareId=STUDIOBASIC&amp;softwareVersion=5.2&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=5.2_15.1&amp;softwareContextId=proc_glmselect&amp;requestor=inapp">The GLMSELECT Procedure</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=5.2_15.1&amp;softwareContextId=proc_plm&amp;requestor=inapp">The PLM Procedure</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=5.2_15.1&amp;softwareContextId=proc_reg&amp;requestor=inapp">The REG Procedure</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <DataSources>
+            <DataSource name="dataset" where="true">
+                <Roles>
+                <Role type="N" name="dependentVariable" minVars="1" maxVars="1" exclude="continuousVariables,classVariables,freqVariable,weightVariable,byVariables">Dependent variable:</Role>
+                <Role type="N" name="continuousVariables" minVars="0" maxVars="0" exclude="dependentVariable,classVariables,freqVariable,weightVariable,byVariables" order="true">Continuous variables:</Role>
+                <Role type="A" name="classVariables" minVars="0" maxVars="0" exclude="dependentVariable,continuousVariables,offsetVariable,idVariables,freqVariable,weightVariable" order="true">Classification variables:</Role>
+                <Role type="N" name="freqVariable" minVars="0" maxVars="1" exclude="dependentVariable,classVariables,continuousVariables,weightVariable,byVariables">Frequency count:</Role>
+                <Role type="N" name="weightVariable" minVars="0" maxVars="1" exclude="dependentVariable,classVariables,continuousVariables,freqVariable,byVariables">Weight:</Role>
+                <Role type="A" name="byVariables" minVars="0" maxVars="0" exclude="dependentVariable,classVariables,continuousVariables,freqVariable,weightVariable" order="true">Group analysis by:</Role>
+                    </Roles>
+            </DataSource>
+        </DataSources>
+
+        <Options>
+            <Option name="dataTab" inputType="string">DATA</Option> 
+            <Option name="optionsTab" inputType="string">OPTIONS</Option> 
+            <Option name="dataGroup" inputType="string">DATA</Option> 
+            <Option name="rolesGroup" inputType="string">ROLES</Option> 
+            <Option name="otherRolesGroup" inputType="string">ADDITIONAL ROLES</Option> 
+
+            <Option name="classParamGroup" inputType="string" indent="1">Parameterization of Effects</Option>
+            <Option name="classParam" inputType="combobox" defaultValue="glmParamChoice">Coding:</Option>
+            <Option name="glmParamChoice" inputType="string">GLM coding</Option>
+            <Option name="effectsParamChoice" inputType="string">Effect coding</Option>
+            <Option name="refParamChoice" inputType="string">Reference coding</Option>
+
+            <Option name="classMissingGroup" inputType="string" indent="1">Treatment of Missing Values</Option>
+            <Option name="classMissingNote" inputType="string">An observation is excluded from the analysis if any variable in the model contains a missing value. In addition, an observation is excluded if any classification variable contains a missing value (regardless of whether the classification variable is used in the model).</Option>
+
+            <Option name="modelGroup" inputType="string">MODEL EFFECTS</Option>
+            <Option name="modelTab" inputType="string">MODEL</Option> 
+            <Option name="modelBuilder" inputType="mixedeffects" width="100%" roleContinuous="continuousVariables" roleClassification="classVariables" excludeTools="POLYEFFECT,TWOFACT,THREEFACT,NFACTPOLY"/>
+
+            <Option name="methodsTab" inputType="string">METHODS</Option>
+            <Option name="outputTab" inputType="string">OUTPUT</Option>
+            <Option name="methodsGroup" inputType="string">METHODS</Option>
+            <Option name="tablesGroup" inputType="string">STATISTICS</Option>
+            
+            <Option name="statisticsCombo" inputType="combobox" defaultValue="defaultStatsChoice">Display statistics:</Option>
+            <Option name="selectedStatsChoice" inputType="string">Default and selected statistics</Option>
+            <Option name="defaultStatsChoice" inputType="string">Default statistics</Option>    
+
+            <Option name="confidence" inputType="combobox" defaultValue="confidence95">Confidence level:</Option>
+            <Option name="confidence90" inputType="string">90%</Option>
+            <Option name="confidence95" inputType="string">95%</Option>
+            <Option name="confidence99" inputType="string">99%</Option>
+            <Option name="confidenceSpecify" inputType="string">Use custom value</Option>
+            <Option name="confidenceValue" inputType="numbertext" indent="1" defaultValue="95" width="75px" required="true" rangeMessage="Enter a number greater than zero and less than 100 for the confidence level" promptMessage="Enter a number greater than zero and less than 100 for the confidence level" missingMessage="Enter a number greater than zero and less than 100 for the confidence level" minValue="0.00000000001" maxValue="99.999999999" invalidMessage="Enter a number greater than zero and less than 100 for the confidence level" decimalPlaces="0,15">Custom confidence level:</Option>
+
+            <Option name="parameterEstimatesGroup" inputType="string" indent="1">Parameter Estimates</Option>
+            <Option name="stb" inputType="checkbox" indent="2">Standardized regression coefficients</Option>
+            <Option name="clb" inputType="checkbox" indent="2">Confidence limits for estimates</Option>
+            <Option name="sumOfSquaresGroup" inputType="string" indent="1">Sums of Squares</Option>
+            <Option name="ss1" inputType="checkbox" indent="2">Sequential sum of squares (Type I)</Option>
+            <Option name="ss2" inputType="checkbox" indent="2">Partial sum of squares (Type II)</Option>
+            <Option name="correlationsGroup" inputType="string" indent="1">Partial and Semipartial Correlations</Option>
+            <Option name="partialCorrs" inputType="checkbox" indent="2">Squared partial correlations</Option>
+            <Option name="semipartialCorrs" inputType="checkbox" indent="2">Squared semipartial correlations</Option>
+
+            <Option name="collinearityGroup" inputType="string">Collinearity</Option>
+            <Option name="collin" inputType="checkbox">Collinearity analysis</Option>
+            <Option name="tol" inputType="checkbox">Tolerance values for estimates</Option>
+            <Option name="vif" inputType="checkbox">Variance inflation factors</Option>
+            <Option name="unequalVarianceGroup" inputType="string">Heteroscedasticity</Option>
+            <Option name="heteroTest" inputType="checkbox">Heteroscedasticity analysis</Option>
+            <Option name="acov" inputType="checkbox">Asymptotic covariance matrix</Option>
+
+            <Option name="diagnosticsGroup" inputType="string" indent="1">Diagnostics</Option>
+            <Option name="influenceStats" inputType="checkbox" indent="2">Analysis of influence</Option>
+            <Option name="residualStats" inputType="checkbox" indent="2">Analysis of residuals</Option>
+            <Option name="predictedStats" inputType="checkbox" indent="2">Predicted values</Option>
+            
+            <Option name="multCompareGroup" inputType="string">Multiple Comparisons</Option>
+
+            <Option name="multCompare" inputType="checkbox">Perform multiple comparisons</Option>
+            <Option name="multCompareExclusion" inputType="string" indent="1">Multiple comparisons are not available if model selection is requested or if GLM parameterization of classification effects is not used.</Option>
+            <Option name="multCompareList" inputType="select" indent="1" sourceType="filterClassification" sourceLink="modelBuilder" multiple="true">Select effects to test:</Option>
+            <Option name="multCompareCombo" inputType="combobox" indent="1" defaultValue="tukeyChoice">Method:</Option>
+            <Option name="bonferroniChoice" inputType="string">Bonferroni</Option>
+            <Option name="dunnettChoice" inputType="string">Dunnett</Option>
+            <Option name="nelsonChoice" inputType="string">Nelson</Option>
+            <Option name="scheffeChoice" inputType="string">Scheffe</Option>
+            <Option name="sidakChoice" inputType="string">Sidak</Option>
+            <Option name="tukeyChoice" inputType="string">Tukey</Option>
+            
+            <Option name="multCompareAlphaCombo" inputType="combobox" indent="1" defaultValue="alpha_05">Significance level:</Option>
+            <Option name="alpha_10" inputType="string">0.10</Option>
+            <Option name="alpha_05" inputType="string">0.05</Option>
+            <Option name="alpha_01" inputType="string">0.01</Option>
+            
+            <Option name="multCompareAlphaSpecify" inputType="string">Use custom value</Option>
+            <Option name="multCompareAlphaValue" inputType="numbertext" indent="2" defaultValue="0.05" width="100px" required="true" rangeMessage="Enter a number greater than zero and less than 1 for the significance level" promptMessage="Enter a number greater than zero and less than 1 for the significance level" missingMessage="Enter a number greater than zero and less than 1 for the significance level" minValue="0.00000000001" maxValue="0.99999999999" invalidMessage="Enter a number greater than zero and less than 1 for the significance level" decimalPlaces="1,15">Custom significance level:</Option>
+            <Option name="diffPlot" inputType="checkbox" defaultValue="1">Mean difference plot</Option>
+                
+            <Option name="plotsGroup" inputType="string">PLOTS</Option>
+            <Option name="diagnosticGroup" inputType="string">Diagnostic and Residual Plots</Option>
+            <Option name="scatterGroup" inputType="string">Scatter Plots</Option>
+            <Option name="diagnosticPlots" inputType="checkbox" defaultValue="1">Diagnostic plots</Option>
+            <Option name="unpackDiagnosticPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+
+            <Option name="unpackChoice" inputType="string">Individual plots</Option>
+            <Option name="panelChoice" inputType="string">Panel of plots</Option>
+
+            <Option name="residualPlots" inputType="checkbox" defaultValue="1">Residuals for each explanatory variable</Option>
+            <Option name="unpackResidualPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+            <Option name="partialPlots" inputType="checkbox">Partial regression plots for each explanatory variable</Option>
+            <Option name="unpackPartialPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+            <Option name="fitPlot" inputType="checkbox" defaultValue="1">Fit plot for a single continuous variable</Option>
+
+            <Option name="moreDiagnosticPlots" inputType="string">More Diagnostic Plots</Option>
+            <Option name="dffitsPlot" inputType="checkbox">DFFITS statistic by observation number</Option>
+            <Option name="dfbetasPlots" inputType="checkbox">DFBETAS statistic by observation number for each explanatory variable</Option>
+            <Option name="unpackDfbetasPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+            <Option name="observedByPredictedPlot" inputType="checkbox" defaultValue="1">Observed values by predicted values</Option>
+            <Option name="rstudentByPredictedPlot" inputType="checkbox">Rstudent statistic by predicted values</Option>
+            <Option name="plotLabels" inputType="checkbox">Label extreme points</Option>
+
+            <Option name="maxpointsCombo" inputType="combobox" defaultValue="maxpointsDefault">Maximum number of plot points:</Option>
+            <Option name="maxpointsDefault" inputType="string">Default(5,000)</Option>
+            <Option name="maxpoints10000" inputType="string">10,000</Option>
+            <Option name="maxpointsSpecify" inputType="string">Use custom value</Option>
+            <Option name="maxpointsNoLimit" inputType="string">No limit</Option>
+
+            <Option name="maxpointsValue" inputType="numbertext" indent="1" defaultValue="5000" required="true" rangeMessage="Enter an integer number greater than zero for the maximum number of plot points" promptMessage="Enter an integer number greater than zero for the maximum number of plot points" missingMessage="Enter an integer number greater than zero for the maximum number of plot points" minValue="1" invalidMessage="Enter an integer number greater than zero for the maximum number of plot points" decimalPlaces="0">Custom maximum number of points:</Option>
+            
+            <Option name="outputGroup" inputType="string">OUTPUT DATA SETS</Option>
+<!-- NOT USED
+            <Option name="outestDS" inputType="checkbox" nlsKey="outestDSKey.txt">Create parameter estimates data set</Option>
+            <Option name="outestDSName" indent="1" inputType="outputdata" unique="true" defaultValue="Work.Reg_est" required="true"
+                nlsKey="outestDSNameKey.txt" 
+                linkedcheckbox="replaceOutestDS">Data set name: </Option>
+            <Option name="replaceOutestDS" inputType="checkbox" indent="2" linkedoutputdata="outestDSName" defaultValue="0" nlsKey="replaceOutestDSKey.txt">Replace data set</Option>
+            <Option name="statsToAddLabelOutest" indent="1" inputType="string" nlsKey="statsToAddLabelOutestKey.txt">Include statistics: </Option>
+            <Option name="addCovout" indent="2" inputType="checkbox" nlsKey="addCovoutKey.txt">Covariances of parameter estimates</Option>
+            <Option name="addEdf"    indent="2" inputType="checkbox" nlsKey="addEdfKey.txt">Error degrees of freedom, model R square</Option>
+            <Option name="addPress"  indent="2" inputType="checkbox" nlsKey="addPressKey.txt">Press statistic</Option>
+            <Option name="addSEB"    indent="2" inputType="checkbox" nlsKey="addSEBKey.txt">Standard errors of parameter estimates</Option>
+-->
+            <Option name="outputDS" inputType="checkbox">Create observationwise statistics data set</Option>
+            <Option name="outputDSName" inputType="outputdata" indent="1" defaultValue="work.Reg_stats" required="true" unique="true">Data set name:</Option>
+  
+            <Option name="residualStatsGroup" inputType="string" indent="1">Residuals</Option>
+            <Option name="influenceStatsGroup" inputType="string" indent="1">Influence Statistics</Option>
+            <Option name="predictedStatsGroup" inputType="string" indent="1">Predicted Values</Option>
+
+            <Option name="cookd" inputType="checkbox">Cook's D</Option>
+            <Option name="covratio" inputType="checkbox">Covratio</Option>
+            <Option name="dffits" inputType="checkbox">Dffits</Option>
+            <Option name="leverage" inputType="checkbox">Leverage</Option>
+            <Option name="predicted" inputType="checkbox">Predicted value</Option>
+            <Option name="press" inputType="checkbox">Press statistic</Option>
+            <Option name="residual" inputType="checkbox">Residual</Option>
+            <Option name="student" inputType="checkbox">Studentized residual</Option>
+            <Option name="rstudent" inputType="checkbox">Studentized residual with current observation removed</Option>
+            <Option name="cl" inputType="checkbox">Confidence intervals for individual predicted value</Option>   
+            <Option name="clm" inputType="checkbox">Confidence intervals for mean predicted value</Option>
+
+<!-- Model selection methods -->
+            <Option name="selectionTab" inputType="string">SELECTION</Option>
+            <Option name="selectionGroup" inputType="string">MODEL SELECTION</Option>
+            <Option name="selectionMethod" inputType="combobox" defaultValue="noneSelectionChoice">Selection method:</Option>
+            <Option name="noneSelectionChoice" inputType="string">None</Option>
+            <Option name="forwardChoice" inputType="string">Forward selection</Option>
+            <Option name="backwardChoice" inputType="string">Backward elimination</Option>
+            <Option name="stepwiseChoice" inputType="string">Stepwise selection</Option>
+            
+            <!-- 0 < slEntry < 1 -->
+            <Option name="slEntry" inputType="numbertext" defaultValue="0.05" width="100px" required="true" rangeMessage="Enter a value greater than 0 and less than 1 for the significance level to add an effect to the model" promptMessage="Enter a value greater than 0 and less than 1 for the significance level to add an effect to the model" missingMessage="Enter a value greater than 0 and less than 1 for the significance level to add an effect to the model" minValue="0" maxValue="1" invalidMessage="Enter a value greater than 0 and less than 1 for the significance level to add an effect to the model" decimalPlaces="1,15">Significance level to add an effect to the model:</Option>
+
+            <!-- 0 < slStay < 1 -->
+            <Option name="slStay" inputType="numbertext" defaultValue="0.05" width="100px" required="true" rangeMessage="Enter a value greater than 0 and less than 1 for the significance level to remove an effect from the model" promptMessage="Enter a value greater than 0 and less than 1 for the significance level to remove an effect from the model" missingMessage="Enter a value greater than 0 and less than 1 for the significance level to remove an effect from the model" minValue="0" maxValue="1" invalidMessage="Enter a value greater than 0 and less than 1 for the significance level to remove an effect from the model" decimalPlaces="1,15">Significance level to remove an effect from the model:</Option>
+
+            <Option name="selectMethod" inputType="combobox" defaultValue="sbcChoice">Add/remove effects with:</Option>
+            <Option name="stopMethod" inputType="combobox" defaultValue="defaultCriterionChoice">Stop adding/removing effects with:</Option>
+            <Option name="chooseMethod" inputType="combobox" defaultValue="defaultCriterionChoice">Select best model by:</Option>
+
+            <Option name="defaultCriterionChoice" inputType="string">Default criterion</Option>
+            <Option name="sigLevelChoice" inputType="string">Significance level</Option>
+            <Option name="adjrsqChoice" inputType="string">Adjusted R-square statistic</Option>
+            <Option name="aicChoice" inputType="string">Akaike's information criterion</Option>
+            <Option name="aiccChoice" inputType="string">Akaike's information criterion corrected for small-sample bias</Option>
+            <Option name="bicChoice" inputType="string">Sawa Bayesian information criterion</Option>
+            <Option name="cpChoice" inputType="string">Mallows' C(p) statistic</Option>
+            <Option name="pressChoice" inputType="string">Press statistic</Option>
+            <Option name="sbcChoice" inputType="string">Schwarz Bayesian information criterion</Option>
+            <Option name="rsquareChoice" inputType="string">R-square statistic</Option>
+            <Option name="noStopChoice" inputType="string">None</Option>
+
+            <Option name="modelSelectionTablesGroup" inputType="string">SELECTION STATISTICS</Option>
+            <Option name="modelFitStatsCombo" inputType="combobox" defaultValue="defaultFitStatsChoice">Model fit statistics:</Option>
+            <Option name="defaultFitStatsChoice" inputType="string">Default fit statistics</Option>
+            <Option name="allFitStatsChoice" inputType="string">All fit statistics</Option>
+            <Option name="selectedFitStatsChoice" inputType="string">Selected fit statistics</Option>
+            <Option name="aicStat" inputType="checkbox">Akaike's information criterion</Option>
+            <Option name="aiccStat" inputType="checkbox">Akaike's information criterion corrected for small-sample bias</Option>
+            <Option name="bicStat" inputType="checkbox">Bayesian information criterion</Option>
+            <Option name="cpStat" inputType="checkbox">Mallows' Cp</Option>
+            <Option name="rsquareStat" inputType="checkbox">R-square</Option>
+            <Option name="adjrsqStat" inputType="checkbox">Adjusted R-square</Option>
+            <Option name="sbcStat" inputType="checkbox">Schwarz's Bayesian information criterion</Option>
+            <Option name="pressStat" inputType="checkbox">Press statistic</Option>
+
+            <Option name="selectionPlotsGroup" inputType="string">SELECTION PLOTS</Option>
+            <Option name="criteriaPlots" inputType="checkbox" defaultValue="1">Criteria plots</Option>
+            <Option name="unpackCriteriaPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+
+            <Option name="coefficientPlots" inputType="checkbox" defaultValue="0">Coefficient plots</Option>
+            <Option name="unpackCoefficientPlots" inputType="combobox" indent="1" defaultValue="panelChoice">Display as:</Option>
+            
+            <Option name="selectionDetailsGroup" inputType="string">DETAILS</Option>
+            <Option name="detailsCombo" inputType="combobox" defaultValue="summaryDetailsChoice">Selection process details:</Option>
+            <Option name="summaryDetailsChoice" inputType="string">Selection summary</Option>
+            <Option name="stepDetailsChoice" inputType="string">Details for each step</Option>
+            <Option name="allDetailsChoice" inputType="string">All</Option>
+
+            <Option name="stepDetailsLabel" inputType="string">Additional information for each step</Option>
+            <Option name="anovaStepDetails" inputType="checkbox" indent="1">ANOVA table</Option>
+            <Option name="fitStatsStepDetails" inputType="checkbox" indent="1">Fit statistics</Option>
+            <Option name="parmestStepDetails" inputType="checkbox" indent="1">Parameter estimates</Option>
+
+        </Options>
+    </Metadata>
+
+    <UI>
+        <Container option="dataTab">
+            <Group option="dataGroup" open="true">
+                <DataItem data="dataset"/>
+            </Group>
+            <Group option="rolesGroup" open="true">
+                <RoleItem role="dependentVariable"/>
+                <RoleItem role="classVariables"/>
+                <Group option="classParamGroup">
+                    <OptionChoice option="classParam">
+                        <OptionItem option="effectsParamChoice"/>
+                        <OptionItem option="glmParamChoice"/>
+                        <OptionItem option="refParamChoice"/>
+                    </OptionChoice>
+                </Group>
+                <Group option="classMissingGroup">
+                    <OptionItem option="classMissingNote"/>
+                </Group>
+                <RoleItem role="continuousVariables"/>
+            </Group>
+            <Group option="otherRolesGroup">
+                <RoleItem role="freqVariable"/>
+                <RoleItem role="weightVariable"/>
+                <RoleItem role="byVariables"/>
+            </Group>
+        </Container>
+
+        <Container option="modelTab">   
+            <Group option="modelGroup" open="true">
+                <OptionItem option="modelBuilder"/>
+            </Group>
+        </Container>
+        
+        <Container option="optionsTab"> 
+            <Group option="methodsGroup" open="true">
+                    <OptionChoice option="confidence">
+                        <OptionItem option="confidence90"/>
+                        <OptionItem option="confidence95"/>
+                        <OptionItem option="confidence99"/>
+                        <OptionItem option="confidenceSpecify"/>
+                    </OptionChoice>
+                    <OptionItem option="confidenceValue"/>
+
+            </Group>
+            <Group option="tablesGroup" open="true">
+                <OptionChoice option="statisticsCombo">
+                    <OptionItem option="defaultStatsChoice"/>
+                    <OptionItem option="selectedStatsChoice"/>
+                </OptionChoice>
+                <OptionItem option="parameterEstimatesGroup"/>
+                    <OptionItem option="stb"/>
+                    <OptionItem option="clb"/>
+                    
+                <OptionItem option="sumOfSquaresGroup"/>
+                    <OptionItem option="ss1"/>
+                    <OptionItem option="ss2"/>
+
+                <OptionItem option="correlationsGroup"/>
+                    <OptionItem option="partialCorrs"/>
+                    <OptionItem option="semipartialCorrs"/>
+                
+                <OptionItem option="diagnosticsGroup"/>
+                    <OptionItem option="influenceStats"/>
+                    <OptionItem option="residualStats"/>
+                    <OptionItem option="predictedStats"/>
+
+            <Group option="multCompareGroup">
+                <OptionItem option="multCompare"/>
+                <OptionItem option="multCompareExclusion"/>
+                <OptionChoice option="multCompareList">
+                </OptionChoice>
+                <OptionChoice option="multCompareCombo">
+                    <OptionItem option="bonferroniChoice"/>
+                    <OptionItem option="nelsonChoice"/>
+                    <OptionItem option="scheffeChoice"/>
+                    <OptionItem option="sidakChoice"/>
+                    <OptionItem option="tukeyChoice"/>
+                </OptionChoice>
+                <OptionChoice option="multCompareAlphaCombo">
+                    <OptionItem option="alpha_10"/>
+                    <OptionItem option="alpha_05"/>
+                    <OptionItem option="alpha_01"/>
+                    <OptionItem option="multCompareAlphaSpecify"/>
+                </OptionChoice>
+                <OptionItem option="multCompareAlphaValue"/>
+                <OptionItem option="diffPlot"/>
+            </Group>
+                
+                <Group option="collinearityGroup">
+                    <OptionItem option="collin"/>
+                    <OptionItem option="tol"/>
+                    <OptionItem option="vif"/>
+                </Group>
+
+                <Group option="unequalVarianceGroup">
+                    <OptionItem option="heteroTest"/>
+                    <OptionItem option="acov"/>
+                </Group>
+
+            </Group>
+
+            <Group option="plotsGroup" open="true">
+                    <Group option="diagnosticGroup" open="true">
+                    <OptionItem option="diagnosticPlots"/>
+                    <OptionChoice option="unpackDiagnosticPlots">
+                        <OptionItem option="unpackChoice"/>
+                        <OptionItem option="panelChoice"/>
+                    </OptionChoice>
+
+                    <OptionItem option="residualPlots"/>
+                    <OptionChoice option="unpackResidualPlots">
+                        <OptionItem option="unpackChoice"/>
+                        <OptionItem option="panelChoice"/>
+                    </OptionChoice>
+                
+                    <Group option="moreDiagnosticPlots">
+                        <OptionItem option="rstudentByPredictedPlot"/>
+                        <OptionItem option="dffitsPlot"/>
+                        <OptionItem option="dfbetasPlots"/>
+                        <OptionChoice option="unpackDfbetasPlots">
+                            <OptionItem option="unpackChoice"/>
+                            <OptionItem option="panelChoice"/>
+                        </OptionChoice>
+                        <OptionItem option="plotLabels"/>
+                    </Group>
+                </Group>
+                
+                <Group option="scatterGroup">
+                    <OptionItem option="fitPlot"/>
+                    <OptionItem option="observedByPredictedPlot"/>
+
+                    <OptionItem option="partialPlots"/>
+                    <OptionChoice option="unpackPartialPlots">
+                        <OptionItem option="unpackChoice"/>
+                        <OptionItem option="panelChoice"/>
+                    </OptionChoice>
+                </Group>
+
+                <OptionChoice option="maxpointsCombo">
+                    <OptionItem option="maxpointsDefault"/>
+                    <OptionItem option="maxpoints10000"/>
+                    <OptionItem option="maxpointsSpecify"/>
+                    <OptionItem option="maxpointsNoLimit"/>
+                </OptionChoice>
+                <OptionItem option="maxpointsValue"/>
+            </Group>
+
+        </Container>
+        
+        <Container option="selectionTab">
+            <Group option="selectionGroup" open="true">
+                <OptionChoice option="selectionMethod">
+                    <OptionItem option="noneSelectionChoice"/>
+                    <OptionItem option="forwardChoice"/>
+                    <OptionItem option="backwardChoice"/>
+                    <OptionItem option="stepwiseChoice"/>
+                </OptionChoice>
+                <OptionChoice option="selectMethod">
+                    <OptionItem option="adjrsqChoice"/>
+                    <OptionItem option="aicChoice"/>
+                    <OptionItem option="aiccChoice"/>
+                    <OptionItem option="bicChoice"/>
+                    <OptionItem option="cpChoice"/>
+                    <OptionItem option="pressChoice"/>
+                    <OptionItem option="rsquareChoice"/>
+                    <OptionItem option="sbcChoice"/>
+                    <OptionItem option="sigLevelChoice"/>
+                </OptionChoice>
+                <OptionChoice option="stopMethod">
+                    <OptionItem option="defaultCriterionChoice"/>
+                    <OptionItem option="adjrsqChoice"/>
+                    <OptionItem option="aicChoice"/>
+                    <OptionItem option="aiccChoice"/>
+                    <OptionItem option="bicChoice"/>
+                    <OptionItem option="cpChoice"/>
+                    <OptionItem option="pressChoice"/>
+                    <OptionItem option="sbcChoice"/>
+                    <OptionItem option="sigLevelChoice"/>
+                    <OptionItem option="noStopChoice"/>
+                </OptionChoice>
+                <OptionChoice option="chooseMethod">
+                    <OptionItem option="defaultCriterionChoice"/>
+                    <OptionItem option="adjrsqChoice"/>
+                    <OptionItem option="aicChoice"/>
+                    <OptionItem option="aiccChoice"/>
+                    <OptionItem option="bicChoice"/>
+                    <OptionItem option="cpChoice"/>
+                    <OptionItem option="pressChoice"/>
+                    <OptionItem option="sbcChoice"/>
+                </OptionChoice>
+                <OptionItem option="slEntry"/>
+                <OptionItem option="slStay"/>
+            </Group>
+                    
+            <Group option="modelSelectionTablesGroup">
+                    <OptionChoice option="modelFitStatsCombo">
+                        <OptionItem option="defaultFitStatsChoice"/>
+                        <OptionItem option="allFitStatsChoice"/>
+                        <OptionItem option="selectedFitStatsChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="adjrsqStat"/>
+                    <OptionItem option="aicStat"/>
+                    <OptionItem option="aiccStat"/>
+                    <OptionItem option="bicStat"/>
+                    <OptionItem option="cpStat"/>
+                    <OptionItem option="pressStat"/>
+                    <OptionItem option="rsquareStat"/>
+                    <OptionItem option="sbcStat"/>
+            </Group>
+            
+            <Group option="selectionPlotsGroup">
+                    <OptionItem option="criteriaPlots"/>
+                    <OptionChoice option="unpackCriteriaPlots">
+                        <OptionItem option="unpackChoice"/>
+                        <OptionItem option="panelChoice"/>
+                    </OptionChoice>
+
+                    <OptionItem option="coefficientPlots"/>
+                    <OptionChoice option="unpackCoefficientPlots">
+                        <OptionItem option="unpackChoice"/>
+                        <OptionItem option="panelChoice"/>
+                    </OptionChoice>
+            </Group>
+        
+            <Group option="selectionDetailsGroup">
+                <OptionChoice option="detailsCombo">
+                    <OptionItem option="summaryDetailsChoice"/>
+                    <OptionItem option="stepDetailsChoice"/>
+                    <OptionItem option="allDetailsChoice"/> 
+                </OptionChoice>
+                <OptionItem option="stepDetailsLabel"/>
+                <OptionItem option="anovaStepDetails"/>
+                <OptionItem option="fitStatsStepDetails"/>
+                <OptionItem option="parmestStepDetails"/>
+            </Group>
+        </Container>
+        
+        <Container option="outputTab">  
+            <Group option="outputGroup" open="true">
+                
+                <OptionItem option="outputDS"/>
+                <OptionItem option="outputDSName"/>
+                <Group option="predictedStatsGroup" open="true">                
+                    <OptionItem option="predicted"/>
+                    <OptionItem option="cl"/>
+                    <OptionItem option="clm"/>
+                </Group>
+                <Group option="residualStatsGroup">             
+                    <OptionItem option="residual"/>
+                    <OptionItem option="student"/>
+                    <OptionItem option="rstudent"/>
+                    <OptionItem option="press"/>
+                </Group>
+                <Group option="influenceStatsGroup">                
+                    <OptionItem option="cookd"/>
+                    <OptionItem option="covratio"/>
+                    <OptionItem option="dffits"/>
+                    <OptionItem option="leverage"/>
+                </Group>
+
+            </Group>
+        </Container>
+    </UI>
+    
+    <Dependencies>        
+        <Dependency condition="($continuousVariables.size() &gt;= 1 &amp;&amp;              $modelBuilder.modelSummaryValues.fixedEffectsCount == 1 &amp;&amp;             $modelBuilder.modelSummaryValues.fixedContinuousMainEffectsCount == 1)">
+            <Target option="fitPlot" conditionResult="true" action="enable"/>
+            <Target option="fitPlot" conditionResult="false" action="disable"/>
+        </Dependency>
+        
+        <Dependency condition="($confidence == 'confidenceSpecify')">
+             <Target option="confidenceValue" conditionResult="true" action="show"/>
+             <Target option="confidenceValue" conditionResult="false" action="hide"/>
+        </Dependency>      
+        <Dependency condition="($diagnosticPlots == '1')">
+            <Target option="unpackDiagnosticPlots" conditionResult="true" action="show"/>
+            <Target option="unpackDiagnosticPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($residualPlots == '1')">
+            <Target option="unpackResidualPlots" conditionResult="true" action="show"/>
+            <Target option="unpackResidualPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($dfbetasPlots == '1')">
+            <Target option="unpackDfbetasPlots" conditionResult="true" action="show"/>
+            <Target option="unpackDfbetasPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($partialPlots == '1')">
+            <Target option="unpackPartialPlots" conditionResult="true" action="show"/>
+            <Target option="unpackPartialPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+        <Dependency condition="($diagnosticPlots == '1' || $residualPlots == '1'|| $fitPlot == '1' ||             $dfbetasPlots == '1' || $partialPlots == '1' || $rstudentByPredictedPlot == '1' ||            $observedByPredictedPlot == '1' || $dffitsPlot == '1')">
+            <Target option="maxpointsCombo" conditionResult="true" action="enable"/>
+            <Target option="maxpointsCombo" conditionResult="false" action="disable"/>
+        </Dependency>
+        <Dependency condition="($maxpointsCombo=='maxpointsSpecify')">
+            <Target option="maxpointsValue" conditionResult="true" action="show"/>
+            <Target option="maxpointsValue" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($statisticsCombo=='selectedStatsChoice')">
+            <Target option="stb" conditionResult="true" action="show"/>
+            <Target option="stb" conditionResult="false" action="hide"/>
+            <Target option="clb" conditionResult="true" action="show"/>
+            <Target option="clb" conditionResult="false" action="hide"/>
+            <Target option="ss1" conditionResult="true" action="show"/>
+            <Target option="ss1" conditionResult="false" action="hide"/>
+            <Target option="ss2" conditionResult="true" action="show"/>
+            <Target option="ss2" conditionResult="false" action="hide"/>
+            <Target option="partialCorrs" conditionResult="true" action="show"/>
+            <Target option="partialCorrs" conditionResult="false" action="hide"/>
+            <Target option="semipartialCorrs" conditionResult="true" action="show"/>
+            <Target option="semipartialCorrs" conditionResult="false" action="hide"/>
+            <Target option="collin" conditionResult="true" action="show"/>
+            <Target option="collin" conditionResult="false" action="hide"/>
+            <Target option="tol" conditionResult="true" action="show"/>
+            <Target option="tol" conditionResult="false" action="hide"/>
+            <Target option="influenceStats" conditionResult="true" action="show"/>
+            <Target option="influenceStats" conditionResult="false" action="hide"/>
+            <Target option="residualStats" conditionResult="true" action="show"/>
+            <Target option="residualStats" conditionResult="false" action="hide"/>
+            <Target option="predictedStats" conditionResult="true" action="show"/>
+            <Target option="predictedStats" conditionResult="false" action="hide"/>
+            <Target option="parameterEstimatesGroup" conditionResult="true" action="show"/>
+            <Target option="parameterEstimatesGroup" conditionResult="false" action="hide"/>
+            <Target option="sumOfSquaresGroup" conditionResult="true" action="show"/>
+            <Target option="sumOfSquaresGroup" conditionResult="false" action="hide"/>
+            <Target option="correlationsGroup" conditionResult="true" action="show"/>
+            <Target option="correlationsGroup" conditionResult="false" action="hide"/>
+            <Target option="diagnosticsGroup" conditionResult="true" action="show"/>
+            <Target option="diagnosticsGroup" conditionResult="false" action="hide"/>       
+            <Target option="collinearityGroup" conditionResult="true" action="show"/>
+            <Target option="collinearityGroup" conditionResult="false" action="hide"/>
+            <Target option="unequalVarianceGroup" conditionResult="true" action="show"/>
+            <Target option="unequalVarianceGroup" conditionResult="false" action="hide"/>
+
+            <Target option="multCompareGroup" conditionResult="true" action="show"/>
+            <Target option="multCompareGroup" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+        <Dependency condition="($statisticsCombo=='selectedStatsChoice' &amp;&amp; $classParam=='glmParamChoice' &amp;&amp; $selectionMethod == 'noneSelectionChoice')">
+            <Target option="multCompare" conditionResult="true" action="enable"/>
+            <Target option="multCompare" conditionResult="false" action="disable"/>
+            <Target option="multCompareExclusion" conditionResult="true" action="hide"/>
+            <Target option="multCompareExclusion" conditionResult="false" action="show"/>
+        </Dependency>
+        <Dependency condition="($multCompare == 1)">
+            <Target option="multCompareList" conditionResult="true" action="show"/>
+            <Target option="multCompareList" conditionResult="false" action="hide"/>
+            <Target option="multCompareCombo" conditionResult="true" action="show"/>
+            <Target option="multCompareCombo" conditionResult="false" action="hide"/>
+            <Target option="multCompareAlphaCombo" conditionResult="true" action="show"/>
+            <Target option="multCompareAlphaCombo" conditionResult="false" action="hide"/>
+
+            <Target option="diffPlot" conditionResult="true" action="show"/>
+            <Target option="diffPlot" conditionResult="false" action="hide"/>
+
+        </Dependency>
+        <Dependency condition="($multCompare == 1 &amp;&amp; $multCompareAlphaCombo == 'multCompareAlphaSpecify')">
+            <Target option="multCompareAlphaValue" conditionResult="true" action="show"/>
+            <Target option="multCompareAlphaValue" conditionResult="false" action="hide"/>
+        </Dependency>
+    
+        <Dependency condition="($outputDS=='1')">
+            <Target option="outputDSName" conditionResult="true" action="enable"/>
+            <Target option="outputDSName" conditionResult="false" action="disable"/>
+
+            <Target option="influenceStatsGroup" conditionResult="true" action="show"/>
+            <Target option="influenceStatsGroup" conditionResult="false" action="hide"/>
+            <Target option="residualStatsGroup" conditionResult="true" action="show"/>
+            <Target option="residualStatsGroup" conditionResult="false" action="hide"/>
+            <Target option="predictedStatsGroup" conditionResult="true" action="show"/>
+            <Target option="predictedStatsGroup" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+        <Dependency condition="(!($selectionMethod == 'noneSelectionChoice'))">
+            <Target option="selectMethod" conditionResult="true" action="show"/>
+            <Target option="selectMethod" conditionResult="false" action="hide"/>
+            <Target option="stopMethod" conditionResult="true" action="show"/>
+            <Target option="stopMethod" conditionResult="false" action="hide"/>
+            <Target option="chooseMethod" conditionResult="true" action="show"/>
+            <Target option="chooseMethod" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+        <Dependency condition=" ($selectionMethod == 'forwardChoice' || $selectionMethod == 'stepwiseChoice') &amp;&amp; ( ($selectMethod &amp;&amp; $selectMethod =='sigLevelChoice') ||  ($stopMethod   &amp;&amp; $stopMethod   =='sigLevelChoice') )">
+            <Target option="slEntry" conditionResult="true" action="show"/>
+            <Target option="slEntry" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+        <Dependency condition=" ($selectionMethod == 'backwardChoice' || $selectionMethod == 'stepwiseChoice') &amp;&amp; ( ($selectMethod &amp;&amp; $selectMethod =='sigLevelChoice') ||  ($stopMethod   &amp;&amp; $stopMethod   =='sigLevelChoice') )">
+            <Target option="slStay" conditionResult="true" action="show"/>
+            <Target option="slStay" conditionResult="false" action="hide"/>
+        </Dependency>
+        
+<!--COMMENTED OUT       
+        <Dependency condition="(
+($selectMethod &amp;&amp; $selectMethod =='sigLevelChoice') || 
+($stopMethod   &amp;&amp; $stopMethod   =='sigLevelChoice') 
+)">
+            <Target option="slEntry" conditionResult="true"  action="show"/>
+            <Target option="slEntry" conditionResult="false" action="hide"/>
+            <Target option="slStay" conditionResult="true"  action="show"/>
+            <Target option="slStay" conditionResult="false" action="hide"/>
+        </Dependency>
+-->
+        
+        <Dependency condition="($criteriaPlots == '1')">
+            <Target option="unpackCriteriaPlots" conditionResult="true" action="show"/>
+            <Target option="unpackCriteriaPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($coefficientPlots == '1')">
+            <Target option="unpackCoefficientPlots" conditionResult="true" action="show"/>
+            <Target option="unpackCoefficientPlots" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($modelFitStatsCombo == 'selectedFitStatsChoice')">
+            <Target option="adjrsqStat" conditionResult="true" action="show"/>
+            <Target option="adjrsqStat" conditionResult="false" action="hide"/>
+            <Target option="aicStat" conditionResult="true" action="show"/>
+            <Target option="aicStat" conditionResult="false" action="hide"/>
+            <Target option="aiccStat" conditionResult="true" action="show"/>
+            <Target option="aiccStat" conditionResult="false" action="hide"/>
+            <Target option="bicStat" conditionResult="true" action="show"/>
+            <Target option="bicStat" conditionResult="false" action="hide"/>
+            <Target option="cpStat" conditionResult="true" action="show"/>
+            <Target option="cpStat" conditionResult="false" action="hide"/>
+            <Target option="pressStat" conditionResult="true" action="show"/>
+            <Target option="pressStat" conditionResult="false" action="hide"/>
+            <Target option="rsquareStat" conditionResult="true" action="show"/>
+            <Target option="rsquareStat" conditionResult="false" action="hide"/>
+            <Target option="sbcStat" conditionResult="true" action="show"/>
+            <Target option="sbcStat" conditionResult="false" action="hide"/>
+        </Dependency>       
+        <Dependency condition="(!($selectionMethod == 'noneSelectionChoice'))">
+            <Target option="selectionPlotsGroup" conditionResult="true" action="enable"/>
+            <Target option="selectionPlotsGroup" conditionResult="false" action="disable"/>
+            <Target option="selectionDetailsGroup" conditionResult="true" action="show"/>
+            <Target option="selectionDetailsGroup" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($detailsCombo == 'stepDetailsChoice')">
+            <Target option="stepDetailsLabel" conditionResult="true" action="show"/>
+            <Target option="stepDetailsLabel" conditionResult="false" action="hide"/>
+            <Target option="anovaStepDetails" conditionResult="true" action="show"/>
+            <Target option="anovaStepDetails" conditionResult="false" action="hide"/>
+            <Target option="fitStatsStepDetails" conditionResult="true" action="show"/>
+            <Target option="fitStatsStepDetails" conditionResult="false" action="hide"/>
+            <Target option="parmestStepDetails" conditionResult="true" action="show"/>
+            <Target option="parmestStepDetails" conditionResult="false" action="hide"/>
+        </Dependency>
+        <Dependency condition="($multCompareCombo=='nelsonChoice')">
+            <Target option="diffPlot" conditionResult="true" action="disable"/>
+            <Target option="diffPlot" conditionResult="false" action="enable"/>
+        </Dependency>
+        
+    </Dependencies>
+    
+    <Requirements> 
+        <Requirement condition="($continuousVariables.size() &gt; 0 || $classVariables.size() &gt; 0 )">
+            <Message>Select at least one continuous or one classification variable.</Message>
+         </Requirement>
+        <Requirement condition="($continuousVariables.size() == 0 &amp;&amp; $classVariables.size() == 0 ) ||          ($modelBuilder.modelSummaryValues.fixedEffectsCount &gt; 0)">
+            <Message>Add one or more effects to the candidate model on the MODEL tab.</Message>
+         </Requirement>
+        <Requirement condition="!(($outputDS=='1') &amp;&amp; !(             $cookd == 1 ||             $covratio == 1 ||             $dffits == 1 ||             $leverage == 1 ||             $predicted == 1 ||             $residual == 1 ||             $student == 1 ||             $rstudent == 1 ||             $press == 1 || $cl == 1 || $clm == 1))">
+            <Message>Select at least one statistic to include in the output data set.</Message>
+         </Requirement>
+    </Requirements>
+    
+    <CodeTemplate>
+        <![CDATA[
+#macro( GenerateEffect  $modelEffect $numNestedLevels)
+## $numNestedLevels can be 'all' or 'one'.  One extracts only the lowest-level of the hierarchy
+## if the effectType is 'nested', then this is a nested effect
+    #if ( $modelEffect.effectType == 'nested' )
+        ## Handle nested effects in UI5
+        #if($modelEffect.levelInclusionIndices.size() > 0)
+            ## Extract nested effects for all levels of the hierarchy
+            #if($numNestedLevels == 'all')
+                #foreach( $layerNum in $modelEffect.levelInclusionIndices )
+                    ## extract outer terms (remember indexing in hierarchyTerms starts at 0)
+                    #set( $outerTerm = $modelEffect.hierarchyTerms[$layerNum] )
+                    #foreach( $subitem1 in $outerTerm )
+$CTMUtil.toSASName($subitem1)#if($foreach.count < $outerTerm.size())*#end#end
+(#foreach($subterm2 in $modelEffect.hierarchyTerms)
+                        #if($foreach.index < $layerNum)
+#foreach($subitem2 in $subterm2)
+$CTMUtil.toSASName($subitem2)#if($foreach.count < $subterm2.size())*#end#end#if($foreach.index < ($layerNum) - 1) #end
+                        #end
+                    #end)
+                #end
+            ## Extract nested effects for only the lowest level of the hierarchy (for subject and group effects)
+            #elseif($numNestedLevels == 'one')
+                ## Outer term corresponds to the last (lowest) in the hierarchy
+                #set( $layerNum =  $modelEffect.levelInclusionIndices[$MathTool.sub($modelEffect.levelInclusionIndices.size(), 1)])
+                #set( $outerTerm = $modelEffect.hierarchyTerms[$layerNum] )
+                #foreach( $subitem1 in $outerTerm )
+$CTMUtil.toSASName($subitem1)#if($foreach.count < $outerTerm.size())*#end#end
+(#foreach($subterm2 in $modelEffect.hierarchyTerms)
+                    #if($foreach.index < $layerNum)
+#foreach($subitem2 in $subterm2)
+$CTMUtil.toSASName($subitem2)#if($foreach.count < $subterm2.size())*#end#end#if($foreach.index < ($layerNum) - 1) #end
+                    #end
+                #end)
+            #end
+
+        ## Handle pre-UI5 nested effects
+        #elseif($modelEffect.memberSet1.size() > 0)
+            ## extract outer terms
+            #foreach( $subitem1 in $modelEffect.memberSet1 )
+$CTMUtil.toSASName($subitem1)#if($foreach.count < $modelEffect.memberSet1.size())*#end#end
+(#foreach($subitem2 in $modelEffect.memberSet2)
+$CTMUtil.toSASName($subitem2)#if($foreach.count < $modelEffect.memberSet2.size())*#end#end)
+        #end
+## handle 'main' or 'interaction' effects
+    #else
+        ## Extract effects from memberSet1
+        #foreach( $subitem in $modelEffect.memberSet1 )
+$CTMUtil.toSASName($subitem)#if($foreach.count < $modelEffect.memberSet1.size())*#end#end
+    #end
+#end
+
+ods noproctitle;
+ods graphics / imagemap=on;
+
+## are these all main effects of continuous variables and with no model selection?
+#set($useGlmselect=0)
+#if ( $modelBuilder.mixedEffectsModels) 
+   #foreach( $model in $modelBuilder.mixedEffectsModels )
+      #if ($model.emtype=='FIXED')
+         #if($model.modelEffects.size() > 0)
+            #foreach($modelEffect in $model.modelEffects) 
+               #if ( !($modelEffect.effectType=="main")) ## interaction or nested effect
+                  #set($useGlmselect=1)
+               #end
+            #end
+         #end
+      #end
+   #end
+#end 
+
+#if(!($selectionMethod == "noneSelectionChoice") || $classVariables.size() > 0)#set($useGlmselect=1)#end
+
+#set($regPlots=0)
+#if($diagnosticPlots == 1 ||
+    $residualPlots == 1 ||
+    $rstudentByPredictedPlot == 1 ||
+    $observedByPredictedPlot == 1 ||
+    $fitPlot == 1 ||
+    $dffitsPlot == 1 ||
+    $partialPlots == 1 ||
+    $dfbetasPlots == 1)
+    #set($regPlots=1)
+#end
+
+#set($regStatOptions = 0)
+#if ( $stb==1 ||
+ $clb==1 || 
+ $ss1==1 ||
+ $ss2==1 ||
+ $influenceStats==1 ||
+ $residualStats==1 ||
+ $predictedStats==1 ||
+ $partialCorrs==1 ||
+ $semipartialCorrs==1 ||
+ $heteroTest==1  ||
+ $acov==1 || $collin == 1 || $tol == 1 || $vif == 1)#set($regStatOptions = 1)#end
+
+#if     ($confidence == "confidence95")#set( $alpha = 0.05 )
+#elseif ($confidence == "confidence99")#set( $alpha = 0.01 )
+#elseif ($confidence == "confidence90")#set($alpha=0.1)
+#else#set($alpha="%sysevalf((100-$confidenceValue)/100)")
+#end
+
+#if ($byVariables.size() > 0)
+proc sort data=$dataset out=Work.TempDataSorted;
+   #if ($dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+   #end
+   by #foreach( $item in $byVariables ) $item #end;
+run;
+#end
+
+#if ($useGlmselect == 1)
+   #if ($byVariables.size() > 0)
+proc glmselect data=Work.TempDataSorted 
+   #else
+proc glmselect data=$dataset
+   #end
+outdesign(addinputvars)=Work.reg_design
+
+## PLOTS
+   #if ($criteriaPlots == 1 || $coefficientPlots == 1)
+ plots=(
+      #if ($criteriaPlots == 1) criterionpanel#if($unpackCriteriaPlots == 'unpackChoice')(unpack)#end#end
+      #if ($coefficientPlots == 1) coefficientpanel#if($unpackCoefficientPlots == 'unpackChoice')(unpack)#end#end
+)
+   #end
+;
+
+    #if ($byVariables.size() == 0 && $dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+    #end
+
+   #if ( $classVariables.size() > 0 )   
+   class #foreach( $item in $classVariables ) $item #end / param= 
+      #if    ($classParam == 'glmParamChoice')glm
+      #elseif($classParam == 'effectsParamChoice')effect
+      #elseif($classParam == 'refParamChoice')ref
+      #end
+; 
+   #end
+
+## MODEL   
+   model #foreach( $item in $dependentVariable ) $item #end = 
+   #if ( $modelBuilder.mixedEffectsModels )
+      #foreach( $model in $modelBuilder.mixedEffectsModels )
+         #if ($model.emtype=='FIXED')
+            #if ( $model.modelEffects.size() > 0 )
+                #foreach( $modelEffect in $model.modelEffects )
+                   #GenerateEffect( $modelEffect 'all' )
+                #end
+            #end           
+/ showpvalues
+            #if ($model.intercept == "False" ) noint#end
+            
+         #end
+      #end    ## end #foreach( $model in $modelBuilder.mixedEffectsModels )
+   #end    ## end #if ( $modelBuilder.mixedEffectsModels ) 
+   
+## NOTE: THIS ARRANGEMENT ASSUMES THAT THERE IS ONLY ONE MODEL AND IT IS A FIXED EFFECTS MODEL
+## otherwise the following code up to the ";" should be placed after "/showpvalues" above
+
+## SELECTION=
+   selection=#if ($selectionMethod == 'noneSelectionChoice')none
+   #elseif($selectionMethod == 'forwardChoice')forward 
+   #elseif($selectionMethod == 'backwardChoice')backward
+   #elseif($selectionMethod == 'stepwiseChoice')stepwise
+   #end
+ 
+   #if (!($selectionMethod == 'noneSelectionChoice'))
+(
+      #if($selectionMethod == 'forwardChoice')#if($slEntry) slentry=$slEntry#end 
+      #elseif ($selectionMethod == 'backwardChoice')#if($slStay) slstay=$slStay#end 
+      #elseif ($selectionMethod == 'stepwiseChoice')#if($slEntry) slentry=$slEntry#end#if($slStay) slstay=$slStay#end 
+      #end
+
+## SELECT=
+      #if($selectionMethod == 'forwardChoice' || $selectionMethod == 'backwardChoice' || $selectionMethod == 'stepwiseChoice')
+      select=#if($selectMethod == "sigLevelChoice") sl
+         #elseif($selectMethod == "adjrsqChoice") adjrsq
+         #elseif($selectMethod == "aicChoice") aic
+         #elseif($selectMethod == "aiccChoice") aicc
+         #elseif($selectMethod == "aicChoice") aic
+         #elseif($selectMethod == "bicChoice") bic
+         #elseif($selectMethod == "cpChoice") cp
+         #elseif($selectMethod == "pressChoice") press
+         #elseif($selectMethod == "rsquareChoice") rsquare
+         #elseif($selectMethod == "sbcChoice") sbc
+         #end
+      #end
+
+## STOP=
+      #if(!($stopMethod == "defaultCriterionChoice")) stop=#if($stopMethod == "adjrsqChoice") adjrsq
+         #elseif($stopMethod == "aicChoice") aic
+         #elseif($stopMethod == "aiccChoice") aicc
+         #elseif($stopMethod == "bicChoice") bic
+         #elseif($stopMethod == "cpChoice") cp
+         #elseif($stopMethod == "pressChoice") press
+         #elseif($stopMethod == "sbcChoice") sbc
+         #elseif($stopMethod == "sigLevelChoice") sl
+         #elseif($stopMethod == "noStopChoice") none
+         #end 
+      #end
+
+## CHOOSE=
+      #if(!($chooseMethod == "defaultCriterionChoice")) choose=#if($chooseMethod == "adjrsqChoice") adjrsq
+         #elseif($chooseMethod == "aicChoice") aic
+         #elseif($chooseMethod == "aiccChoice") aicc
+         #elseif($chooseMethod == "bicChoice") bic
+         #elseif($chooseMethod == "cpChoice") cp
+         #elseif($chooseMethod == "pressChoice") press
+         #elseif($chooseMethod == "sbcChoice") sbc
+         #end 
+      #end
+)
+
+      #if($detailsCombo == 'stepDetailsChoice') details=steps#if($anovaStepDetails ==1 || $fitStatsStepDetails == 1 || $parmestStepDetails ==1)(
+         #if($anovaStepDetails ==1) anova #end
+         #if($fitStatsStepDetails == 1) fitstats #end
+         #if($parmestStepDetails ==1) parmest #end
+)
+         #end
+      #elseif($detailsCombo == 'allDetailsChoice') details=all
+      #end  ## end of #if($detailsCombo == 'stepDetailsChoice')
+
+   #end
+
+## STATS=
+   #if($modelFitStatsCombo == 'allFitStatsChoice') stats=all
+   #elseif($modelFitStatsCombo == 'selectedFitStatsChoice')
+      #if ($adjrsqStat == 1 || $aicStat == 1 || $aiccStat == 1 || $bicStat == 1 ||
+        $cpStat == 1 || $pressStat == 1 || $rsquareStat == 1 || $sbcStat == 1)
+stats=(
+      #if ($adjrsqStat == 1) adjrsq#end
+      #if ($aicStat == 1) aic#end
+      #if ($aiccStat == 1) aicc#end
+      #if ($bicStat == 1) bic#end
+      #if ($cpStat == 1) cp#end
+      #if ($sbcStat == 1) sbc#end
+      #if ($pressStat == 1) press#end
+      #if ($rsquareStat == 1) rsquare#end
+ )
+   #end
+#end
+;
+
+## STORE
+   #if($multCompare == 1 && $multCompareList.size() > 0)
+   store work.Glmselect_store; 
+   #end
+
+#if( $freqVariable.size() > 0 )
+   freq #foreach( $item in $freqVariable ) $item #end;
+#end
+#if( $weightVariable.size() > 0 )
+   weight #foreach( $item in $weightVariable ) $item #end;
+#end
+#if( $byVariables.size() > 0 )
+   by #foreach( $item in $byVariables ) $item #end;
+#end
+run;
+
+### LSMEANS REQUIRES STORE and PROC PLM ###
+   #if($multCompare == 1 && $multCompareList.size() > 0)
+      #if ($multCompareAlphaCombo == "alpha_05") #set( $mcAlpha = 0.05 ) 
+      #elseif ($multCompareAlphaCombo == "alpha_01") #set( $mcAlpha = 0.01 ) 
+      #elseif ($multCompareAlphaCombo == "alpha_10") #set( $mcAlpha = 0.10 ) 
+      #elseif ($multCompareAlphaCombo == 'multCompareAlphaSpecify') #set( $mcAlpha = $multCompareAlphaValue )  
+      #end
+proc plm restore=work.Glmselect_store;
+            ## process choice in multCompareList 
+   lsmeans 
+      #foreach( $modelEffect in $multCompareList )
+         #GenerateEffect($modelEffect 'all') 
+      #end
+   / adjust=#if ($multCompareCombo == 'bonferroniChoice') bon pdiff=all 
+      #elseif ($multCompareCombo == 'nelsonChoice') nelson
+      #elseif ($multCompareCombo == 'scheffeChoice') scheffe pdiff=all
+      #elseif ($multCompareCombo == 'sidakChoice') sidak pdiff=all
+      #elseif ($multCompareCombo == 'tukeyChoice') tukey pdiff=all
+      #end 
+alpha=$mcAlpha cl
+   #if ($diffPlot == 1) plots=diffplot#else plots=none#end
+;   
+run;
+   #end
+   
+##  This is used with ODS SELECT below
+   #if($regPlots == 1 || $regStatOptions == 1)
+proc reg data=Work.reg_design
+   #end
+
+#else   ## Not using GLMSELECT
+      #if ($byVariables.size() > 0)
+proc reg data=Work.TempDataSorted 
+      #else
+proc reg data=$dataset 
+      #end
+#end
+
+   #if($useGlmselect == 0 || $regPlots == 1 || $regStatOptions == 1)
+ alpha=$alpha
+#if ($diagnosticPlots=="1" || $residualPlots=="1" || $partialPlots == 1 || $fitPlot == 1 || 
+$dffitsPlot == 1 || $dfbetasPlots == 1 || $observedByPredictedPlot == 1 || 
+$rstudentByPredictedPlot == 1) plots(only#if($maxpointsCombo && !($maxpointsCombo == 'maxpointsDefault')) maxpoints=
+#if ($maxpointsCombo == 'maxpoints10000')10000
+#elseif ($maxpointsCombo == 'maxpointsNoLimit')none
+#elseif ($maxpointsCombo == 'maxpointsSpecify')$maxpointsValue
+#end
+#end#if($plotLabels == 1) label#end
+)=( 
+#if ($diagnosticPlots=="1" ) diagnostics#if($unpackDiagnosticPlots == 'unpackChoice')(unpack)#end #end
+#if ($residualPlots=="1" ) residuals#if($unpackResidualPlots == 'unpackChoice')(unpack)#end #end
+#if ($partialPlots=="1" ) partial#if($unpackPartialPlots == 'unpackChoice')(unpack)#end #end
+#if ($rstudentByPredictedPlot == 1) rstudentbypredicted#end
+#if ($dffitsPlot == 1) dffits #end
+#if ($dfbetasPlots == 1) dfbetas#if($unpackDfbetasPlots == 'unpackChoice')(unpack)#end #end
+#if ($fitPlot=="1" ) fitplot #end
+#if ( $observedByPredictedPlot == 1 ) observedbypredicted #end
+
+)
+#else plots=none
+#end
+;
+
+#set($whereIsDone=0)
+#if ($useGlmselect == 0)
+    #if ($byVariables.size() == 0 && $dataset.getWhereClause() != '')
+   where 
+        #if ( $classVariables.size() > 0 )
+(
+        #end   
+   $dataset.getWhereClause()
+        #if ( $classVariables.size() > 0 )
+) and #foreach( $item in $classVariables ) $item is not missing#if($foreach.hasNext) and#end#end;
+        #end
+   ;
+    #set($whereIsDone=1)
+    #end
+#end
+   
+#if ( $classVariables.size() > 0 && $whereIsDone==0)   
+   where #foreach( $item in $classVariables ) $item is not missing#if($foreach.hasNext) and#end#end;
+ #end    
+
+##  ODS SELECT 
+#if ($useGlmselect == 1 && ($regPlots == 1 || $regStatOptions == 1))
+ods select
+      #if ($regStatOptions == 1) 
+         #if( $acov==1 || $stb==1 || $clb==1 || $ss1==1 || $ss2==1 || $partialCorrs==1 || $semipartialCorrs==1 || $tol==1 || $vif==1 ) ParameterEstimates#end
+         #if( $influenceStats==1 || $residualStats==1 || $predictedStats==1) OutputStatistics ResidualStatistics #end
+         #if( $collin=="1" ) CollinDiag#end
+         #if( $heteroTest=="1" ) SpecTest #end
+         #if( $acov=="1" ) ACovEst #end
+      #end 
+      #if($regPlots == 1) 
+##where=(lowcase(_path_) ? 'plot' or lowcase(_path_) ? 'gram' or lowcase(_path_) ? 'panel' or lowcase(_path_) ? 'by' or lowcase(_path_) ? 'sg' or lowcase(_path_) ? 'graph')
+         #if ($diagnosticPlots=="1" ) 
+            #if($unpackDiagnosticPlots == 'panelChoice') DiagnosticsPanel
+            #else ResidualHistogram ResidualByPredicted RStudentByPredicted ObservedByPredicted CooksDPlot RStudentByLeverage QQPlot RFPlot
+            #end 
+         #end
+         #if ($residualPlots=="1" ) ResidualPlot#end
+         #if ($partialPlots=="1" ) PartialPlot#end
+         #if ($rstudentByPredictedPlot == 1) RStudentByPredicted#end
+         #if ($dffitsPlot == 1) DFFITSPlot #end
+         #if ($dfbetasPlots == 1) #if($unpackDfbetasPlots == 'panelChoice') DFBETASPanel#else DFBETASPlot#end #end
+         #if ($fitPlot=="1" ) FitPlot #end
+         #if ($observedByPredictedPlot == 1 ) ObservedByPredicted #end
+      #end
+;
+#end
+
+#if ($useGlmselect == 1)
+    model #foreach( $item in $dependentVariable ) $item #end = &_GLSMOD /#if( $modelBuilder.modelSummaryValues.fixedInterceptValue == "False" ) noint#end
+#else
+    model #foreach( $item in $dependentVariable ) $item #end = 
+#if ( $modelBuilder.mixedEffectsModels )
+   #foreach( $model in $modelBuilder.mixedEffectsModels )
+      #if ($model.emtype=='FIXED')
+            #if ( $model.modelEffects.size() > 0 )
+                #foreach( $modelEffect in $model.modelEffects )
+                   #GenerateEffect( $modelEffect 'all' )
+                #end
+            #end           
+/
+         #if ($model.intercept == "False" ) noint#end
+      #end
+
+   #end    ## end #foreach( $model in $modelBuilder.mixedEffectsModels )
+#end     
+#end
+
+## NOTE: THIS ARRANGEMENT ASSUMES THAT THERE IS ONLY ONE MODEL AND IT IS A FIXED EFFECTS MODEL
+## otherwise the following code up to the ";" should be placed after "/" above IN BOTH PARTS OF THE #IF !!
+
+#if( $stb=="1" ) stb #end
+#if( $clb=="1" ) clb #end
+#if( $ss1=="1" ) ss1 #end
+#if( $ss2=="1" ) ss2 #end
+#if( $influenceStats=="1" ) influence #end
+#if( $residualStats=="1" ) r #end
+#if( $predictedStats=="1" ) p #end
+#if( $partialCorrs=="1" ) pcorr1 pcorr2 #end
+#if( $semipartialCorrs=="1" ) scorr1 scorr2 #end
+#if( $collin=="1" ) #if( $modelBuilder.modelSummaryValues.fixedInterceptValue == "True" ) collin #else collinoint #end #end
+#if( $tol=="1" ) tol #end
+#if( $vif=="1" ) vif #end
+#if( $heteroTest=="1" ) spec #end
+#if( $acov=="1" ) acov #end
+#if ($partialPlots=="1" ) partial#end
+;
+
+#if($outputDS == 1)
+   output out=$outputDSName
+#if ($cookd == 1) cookd=cookd_#end
+#if ($covratio == 1) covratio=covratio_#end
+#if ($dffits == 1) dffits=dffits_#end
+#if ($leverage == 1) h=h_#end
+#if ($predicted == 1) p=p_#end
+#if ($cl == 1) lcl=lcl_ ucl=ucl_#end
+#if ($clm == 1) lclm=lclm_ uclm=uclm_#end
+#if ($press == 1) press=press_#end
+#if ($residual == 1) r=r_#end
+#if ($student == 1) student=student_#end
+#if ($rstudent == 1) rstudent=rstudent_#end
+;
+#end
+
+#if( $freqVariable.size() > 0 )
+   freq #foreach( $item in $freqVariable ) $item #end;
+#end
+#if( $weightVariable.size() > 0 )
+   weight #foreach( $item in $weightVariable ) $item #end;
+#end
+#if( $byVariables.size() > 0 )
+   by #foreach( $item in $byVariables ) $item #end;
+#end
+run; quit;
+#end
+
+#if( $byVariables.size() > 0 )
+proc delete data=Work.TempDataSorted; run;
+#end
+
+#if ($useGlmselect == 1)
+proc delete data=Work.reg_design;run;
+#end
+
+]]>
+    </CodeTemplate>
+
+
+<TemplateValues version="5.1">
+<![CDATA[
+{"dataset":{"librarytable":"SASHELP.CARS"},"dependentVariable":"json:[{\"value\":\"MSRP\",\"type\":\"Numeric\",\"length\":8,\"format\":\"DOLLAR8.\",\"informat\":\"\",\"className\":\"RoleObject\"}]","continuousVariables":"json:[{\"value\":\"EngineSize\",\"type\":\"Numeric\",\"length\":8,\"format\":\"\",\"informat\":\"\",\"className\":\"RoleObject\"}]","classVariables":"json:[{\"value\":\"Type\",\"type\":\"Char\",\"length\":8,\"format\":\"\",\"informat\":\"\",\"className\":\"RoleObject\"},{\"value\":\"Origin\",\"type\":\"Char\",\"length\":6,\"format\":\"\",\"informat\":\"\",\"className\":\"RoleObject\"},{\"value\":\"MPG_Highway\",\"type\":\"Numeric\",\"length\":8,\"format\":\"\",\"informat\":\"\",\"className\":\"RoleObject\"}]","freqVariable":"","weightVariable":"","byVariables":"","classParam":[{"value":"glmParamChoice","displayValue":"GLM coding","keys":["glmParamChoice",null,"GLM coding"],"label":"GLM coding","baseid":"{\"value\":\"glmParamChoice\",\"label\":\"GLM coding\"}","id":"{\"value\":\"glmParamChoice\",\"label\":\"GLM coding\"}1"}],"modelBuilder":{"modelSummaryValues":{"randomEffectsSetCount":0,"repeatedEffectsSetCount":0,"zeroInflatedEffectsSetCount":0,"zeroInflatedEffectsCount":0,"fixedEffectsCount":4,"fixedContinuousMainEffectsCount":1,"fixedClassificationMainEffectsCount":3,"fixedInterceptValue":"True","fixedModelsetInvalidStateCount":0,"randomModelsetInvalidStateCount":0,"repeatedModelsetInvalidStateCount":0,"meansModelsetInvalidStateCount":0,"zeroInflatedModelsetInvalidStateCount":0},"mixedEffectsModels":[{"emtype":"FIXED","intercept":"True","modelEffects":[{"effectType":"main","effectName":"EngineSize","memberSet1":["EngineSize"],"memberSet2":[]},{"effectType":"main","effectName":"Type","memberSet1":["Type"],"memberSet2":[]},{"effectType":"main","effectName":"Origin","memberSet1":["Origin"],"memberSet2":[]},{"effectType":"main","effectName":"MPG_Highway","memberSet1":["MPG_Highway"],"memberSet2":[]}]}]},"statisticsCombo":[{"value":"defaultStatsChoice","displayValue":"Default statistics","keys":["defaultStatsChoice",null,"Default statistics"],"label":"Default statistics","baseid":"{\"value\":\"defaultStatsChoice\",\"label\":\"Default statistics\"}","id":"{\"value\":\"defaultStatsChoice\",\"label\":\"Default statistics\"}1"}],"confidence":[{"value":"confidence95","displayValue":"95%","keys":["confidence95",null,"95%"],"label":"95%","baseid":"{\"value\":\"confidence95\",\"label\":\"95%\"}","id":"{\"value\":\"confidence95\",\"label\":\"95%\"}1"}],"confidenceValue":95,"stb":"0","clb":"0","ss1":"0","ss2":"0","partialCorrs":"0","semipartialCorrs":"0","collin":"0","tol":"0","vif":"0","heteroTest":"0","acov":"0","influenceStats":"0","residualStats":"0","predictedStats":"0","multCompare":"0","multCompareList":[],"multCompareCombo":[{"value":"tukeyChoice","displayValue":"Tukey","keys":["tukeyChoice",null,"Tukey"],"label":"Tukey","baseid":"{\"value\":\"tukeyChoice\",\"label\":\"Tukey\"}","id":"{\"value\":\"tukeyChoice\",\"label\":\"Tukey\"}1"}],"multCompareAlphaCombo":[{"value":"alpha_05","displayValue":"0.05","keys":["alpha_05",null,"0.05"],"label":"0.05","baseid":"{\"value\":\"alpha_05\",\"label\":\"0.05\"}","id":"{\"value\":\"alpha_05\",\"label\":\"0.05\"}1"}],"multCompareAlphaValue":0.05,"diffPlot":"1","diagnosticPlots":"1","unpackDiagnosticPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"residualPlots":"1","unpackResidualPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"partialPlots":"0","unpackPartialPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"fitPlot":"1","dffitsPlot":"0","dfbetasPlots":"0","unpackDfbetasPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"observedByPredictedPlot":"1","rstudentByPredictedPlot":"0","plotLabels":"0","maxpointsCombo":[{"value":"maxpointsDefault","displayValue":"Default(5,000)","keys":["maxpointsDefault",null,"Default(5,000)"],"label":"Default(5,000)","baseid":"{\"value\":\"maxpointsDefault\",\"label\":\"Default(5,000)\"}","id":"{\"value\":\"maxpointsDefault\",\"label\":\"Default(5,000)\"}1"}],"maxpointsValue":5000,"outputDS":"0","outputDSName":{"value":"work.Reg_stats","cbSelected":false},"cookd":"0","covratio":"0","dffits":"0","leverage":"0","predicted":"0","press":"0","residual":"0","student":"0","rstudent":"0","cl":"0","clm":"0","selectionMethod":[{"value":"noneSelectionChoice","displayValue":"None","keys":["noneSelectionChoice",null,"None"],"label":"None","baseid":"{\"value\":\"noneSelectionChoice\",\"label\":\"None\"}","id":"{\"value\":\"noneSelectionChoice\",\"label\":\"None\"}1"}],"slEntry":0.05,"slStay":0.05,"selectMethod":[{"value":"sbcChoice","displayValue":"Schwarz Bayesian information criterion","keys":["sbcChoice",null,"Schwarz Bayesian information criterion"],"label":"Schwarz Bayesian information criterion","baseid":"{\"value\":\"sbcChoice\",\"label\":\"Schwarz Bayesian information criterion\"}","id":"{\"value\":\"sbcChoice\",\"label\":\"Schwarz Bayesian information criterion\"}1"}],"stopMethod":[{"value":"defaultCriterionChoice","displayValue":"Default criterion","keys":["defaultCriterionChoice",null,"Default criterion"],"label":"Default criterion","baseid":"{\"value\":\"defaultCriterionChoice\",\"label\":\"Default criterion\"}","id":"{\"value\":\"defaultCriterionChoice\",\"label\":\"Default criterion\"}1"}],"chooseMethod":[{"value":"defaultCriterionChoice","displayValue":"Default criterion","keys":["defaultCriterionChoice",null,"Default criterion"],"label":"Default criterion","baseid":"{\"value\":\"defaultCriterionChoice\",\"label\":\"Default criterion\"}","id":"{\"value\":\"defaultCriterionChoice\",\"label\":\"Default criterion\"}1"}],"modelFitStatsCombo":[{"value":"defaultFitStatsChoice","displayValue":"Default fit statistics","keys":["defaultFitStatsChoice",null,"Default fit statistics"],"label":"Default fit statistics","baseid":"{\"value\":\"defaultFitStatsChoice\",\"label\":\"Default fit statistics\"}","id":"{\"value\":\"defaultFitStatsChoice\",\"label\":\"Default fit statistics\"}1"}],"aicStat":"0","aiccStat":"0","bicStat":"0","cpStat":"0","rsquareStat":"0","adjrsqStat":"0","sbcStat":"0","pressStat":"0","criteriaPlots":"1","unpackCriteriaPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"coefficientPlots":"0","unpackCoefficientPlots":[{"value":"panelChoice","displayValue":"Panel of plots","keys":["panelChoice",null,"Panel of plots"],"label":"Panel of plots","baseid":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}","id":"{\"value\":\"panelChoice\",\"label\":\"Panel of plots\"}1"}],"detailsCombo":[{"value":"summaryDetailsChoice","displayValue":"Selection summary","keys":["summaryDetailsChoice",null,"Selection summary"],"label":"Selection summary","baseid":"{\"value\":\"summaryDetailsChoice\",\"label\":\"Selection summary\"}","id":"{\"value\":\"summaryDetailsChoice\",\"label\":\"Selection summary\"}1"}],"anovaStepDetails":"0","fitStatsStepDetails":"0","parmestStepDetails":"0"}
+]]>
+</TemplateValues>
+
+</Task>
