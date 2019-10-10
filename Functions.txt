@@ -1,3 +1,6 @@
+
+
+
 truclient_step("2", "Call Function VAN.OpenAndLogOn", "snapshot=Action_2.inf"); 
 truclient_step("3", "Call Function VAN.DatasetAdd", "snapshot=Action_3.inf"); 
 truclient_step("4", "Call Function VAN.ObjectAddToCanvas", "snapshot=Action_4.inf"); 
